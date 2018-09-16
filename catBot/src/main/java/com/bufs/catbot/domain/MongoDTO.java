@@ -1,6 +1,4 @@
-package com.bufs.catbot;
-
-import java.util.List;
+package com.bufs.catbot.domain;
 
 import org.springframework.data.annotation.Id;
 
@@ -12,7 +10,7 @@ public class MongoDTO {
 	Double level;
 	String parent;
 	Boolean isTerminal;
-	List<String> value;
+	Object value;
 
 	
 	public String getId() {
@@ -45,16 +43,19 @@ public class MongoDTO {
 	public void setIsTerminal(Boolean isTerminal) {
 		this.isTerminal = isTerminal;
 	}
-	public List<String> getValue() {
+	
+	
+	
+	public Object getValue() {
 		return value;
 	}
-	public void setValue(List<String> value) {
+	public void setValue(Object value) {
 		this.value = value;
 	}
 	@Override
 	public String toString() {
 		return "MongoDTO [id=" + id + ", name=" + name + ", level=" + level + ", parent=" + parent + ", isTerminal="
-				+ isTerminal + ", value=" + value + "]";
+				+ isTerminal + "]";
 	}
 
 	
