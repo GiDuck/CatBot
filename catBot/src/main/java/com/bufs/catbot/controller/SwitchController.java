@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.bufs.catbot.service.MongoBusService;
 import com.bufs.catbot.service.MongoFindService;
 import com.bufs.catbot.service.MongoService;
 
@@ -28,6 +29,9 @@ public class SwitchController {
 	
 	@Autowired
 	private MongoFindService mongoFindService;
+	
+	@Autowired
+	private MongoBusService mongoBusService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(SwitchController.class);
 	
@@ -71,7 +75,7 @@ public class SwitchController {
 	public Map<String, Map<String, Object>> message(@RequestBody Map<String, Object> reqParam) throws Exception {
 		
 		
-		Map<String, Map<String, Object>> message = new HashMap<>();
+		Map<String, Map<String, Object>> message = new HashMap<String, Map<String, Object>>();
 		
 		String keyParam = (String)(reqParam.get("content"));
 		String user_key = (String)(reqParam.get("user_key"));
@@ -90,6 +94,16 @@ public class SwitchController {
 			logger.info("tempMap : " + tempMap);
  
 			message.put("message", tempMap);
+			
+		}else if(keyParam.contains("현재버스(셔틀)")) {
+			
+			message = mongoService.getCatAnswer("냥냥봇", user_key);
+			message.put("message", mongoBusService.getShuttleBusInfo());
+			
+		}else if(keyParam.contains("전체시간표(셔틀)")){
+			
+			message = mongoService.getCatAnswer("냥냥봇", user_key);
+			message.put("message", mongoBusService.getAllShuttleBusInfo());
 			
 		}
 		else {

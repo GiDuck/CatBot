@@ -9,7 +9,7 @@
 	
 
 
-<mongo:mongo-client id="mongo" host="" port="" credentials=":@admin">
+<mongo:mongo-client id="mongo" host="52.79.251.26" port="27777" credentials="gdtbgl93:kim1234@admin">
 
 
 

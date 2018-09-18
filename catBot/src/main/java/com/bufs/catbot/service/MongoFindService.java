@@ -44,7 +44,7 @@ public class MongoFindService {
 		
 		String rawStr = key.replace("#전화#", "");
 		String[] temp = rawStr.split(" ");
-		List<String> keywords = new ArrayList<>();
+		List<String> keywords = new ArrayList<String>();
 		
 		for(String str : temp) {
 			
