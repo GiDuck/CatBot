@@ -2,7 +2,9 @@ package com.bufs.catbot.service;
 
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -30,13 +32,26 @@ public class MongoBusService{
 	
 
 	
-	 public Map<String, Object> getAllShuttleBusInfo(){
+	 public Map<String, Object> getAllBusInfo(String type, String station, String bound){
 		
-		 Map<String, Object> result = new HashMap<String, Object>();
-		 List<String> pBusTable = busDAO.getAllShuttleBusInfo();
-		 String message = GetAllShuttleBusMessage(parseBusTimeFormat(pBusTable));
-		 result.put("text", message); 
+		 Boolean isShuttleBus = false;
+		 Boolean isWeekend = false;
+		 if(type.contains("셔틀")) {
+			 isShuttleBus = true;
+		 }
 		 
+		 LocalDateTime nowT = LocalDateTime.now();
+			
+			if(nowT.getDayOfWeek() == DayOfWeek.SATURDAY || nowT.getDayOfWeek() == DayOfWeek.SUNDAY) {
+				
+				isWeekend = true;
+		 }
+		 
+		 
+		 Map<String, Object> result = new HashMap<String, Object>();
+		 List<String> pBusTable = busDAO.getAllBusInfo(isShuttleBus, station, bound, isWeekend);
+		 String message = GetAllBusMessage(parseBusTimeFormat(pBusTable), isShuttleBus, station, bound, isWeekend);
+		 result.put("text", message); 
 		 
 		 
 		 return result;
@@ -61,8 +76,7 @@ public class MongoBusService{
 			 
 			 
 			 busTimes.add(new MongoBusTimeFormat(time, hour, min));
-			 
-			 
+	 
 			 
 		 }
 		 
@@ -74,22 +88,32 @@ public class MongoBusService{
 	
 	
 	//셔틀버스 정보를 가져오는 서비스 메소드
-	 public Map<String, Object> getShuttleBusInfo(){
+	 public Map<String, Object> getBusInfo(String type, String station, String bound){
 		 
 		 Date now = new Date();
+		 Boolean isWeekend = false;
+		 Boolean isShuttleBus = false;
+		 String message = "";
 		 Map<String, Object> result = new HashMap<String, Object>();
 		 
+		 
+		 if(type.contains("셔틀")) {
+			 isShuttleBus = true;	 
+		 }
+		 
 		LocalDateTime nowT = LocalDateTime.now();
-		LocalDateTime startT = LocalDateTime.now().withHour(7).withMinute(55);
-		LocalDateTime endT = LocalDateTime.now().withHour(22).withMinute(15);
 		
-		if(nowT.isBefore(startT) || nowT.isAfter(endT) || nowT.getDayOfWeek() == DayOfWeek.SATURDAY || nowT.getDayOfWeek() == DayOfWeek.SUNDAY) {
+		if(nowT.getDayOfWeek() == DayOfWeek.SATURDAY || nowT.getDayOfWeek() == DayOfWeek.SUNDAY) {
 			
+			isWeekend = true;
+		}
+		
+
+		if(isShuttleBus && isWeekend) {
 			 result.put("text", getBlockMessage()); 
 			 return result;
 		}
-			
-			
+
 		 String nowTime = timeFormat.format(now);
 		 String[] timeArr = nowTime.split(":");
 		 
@@ -98,95 +122,85 @@ public class MongoBusService{
 
 		 
 		 
-		 List<MongoBusTimeFormat> pBusTable;
-		 List<String> timeTable;
-		 List<String> oneHourBeforeTable;
-		 List<String> oneHourAfterTable;
+		 List<MongoBusTimeFormat> pBusTable = null;
+		 List<String> timeTable = null;
 
-		 timeTable = busDAO.getShuttleBusInfo(nowTime);
+		 System.out.println("isShuttleBus : " + isShuttleBus);
 		 
-		 if(nowM > 50) {
+		 
+		 if(isShuttleBus) {
+		 
+			 timeTable = busDAO.getBusInfo(nowTime, "셔틀", null, null, null);
+			 pBusTable = BusTimeChooser(timeTable,nowH, nowM,isShuttleBus);
+		
+		 }else {
 			 
-			String oneHourAfter = nowH + 1 < 10 ?  "0"+(nowH+1) : String.valueOf(nowH+1);
-			 oneHourAfterTable = busDAO.getShuttleBusInfo(oneHourAfter);
-			 timeTable.addAll(oneHourAfterTable);
-			
-		 }else if(nowM < 10) {
 			 
-			 String oneHourBefore = nowH - 1 < 10 ?  "0"+(nowH - 1) : String.valueOf(nowH-1);
-			 oneHourBeforeTable = busDAO.getShuttleBusInfo(oneHourBefore);
-			 timeTable.addAll(oneHourBeforeTable);
-
+		timeTable = busDAO.getBusInfo(nowTime, "마을", station, bound, isWeekend);
+		pBusTable = BusTimeChooser(timeTable, nowH, nowM, isShuttleBus);
+			 
+			 
 		 }
-	
-		 pBusTable = BusTimeChooser(timeTable, nowH, nowM);
+		 
 
+		 if(pBusTable.size()!=0) {
+		 
+			 if(isShuttleBus) {
+			 message = GetShuttleBusMessage(pBusTable);
+			 }else {
+				 message = GetTownBusMessage(pBusTable, station, bound);
+			 }
 
-		 String message = GetShuttleBusMessage(pBusTable);
+		 
+		 }else {
+		 
+			 message = getBlockMessage();
+		 
+		 }
 		 result.put("text", message); 
 		 return result;
 		 
 	 }
 	 
+
 	 
 	//현재 시간에 가장 가까운 버스 정보를 찾아내는 서비스 메소드
-	 public List<MongoBusTimeFormat> BusTimeChooser(List<String> busTable, int nowH, int nowM){
+	 public List<MongoBusTimeFormat> BusTimeChooser(List<String> busTable, int nowH, int nowM, Boolean isShuttleBus){
  
 		 List<MongoBusTimeFormat> choicedBus = new ArrayList<MongoBusTimeFormat>();
+		 
+		 LocalTime timeNow = LocalTime.of(nowH, nowM);
+		 LocalTime compTime;
+		 Duration timeGap;
+		 int minGap;
+		 
 
+		 
 		 //현재 시간과 비교해서 차이가 18분 이하이고 현재 시간보다 빠를때 (즉, 버스가 출발했을때를 가정)
-		 for(String time : busTable ) {
+		 for( String time : busTable ) {
 			 String[] tempTimeArr = time.split(":");
 			 int compH = Integer.parseInt(tempTimeArr[0]);
 			 int compM = Integer.parseInt(tempTimeArr[1]);
 			 
-			 compM = compM == 0 ? 60 : compM;
+			 compTime = LocalTime.of(compH, compM);
 
-			 //현재 시와 비교 시가 같을때
-			 if(nowH == compH) {
-				 
-				 int tempM = nowM-compM;
-				 
-				 if(tempM > -1 && tempM <= 10 ) {
+			 timeGap = Duration.between(timeNow, compTime);
+			 minGap = Integer.valueOf(String.valueOf(timeGap.getSeconds()))/60;
+		
+
+				 if( isShuttleBus && minGap > -15 && minGap < 10) {
 					 
-					 MongoBusTimeFormat busTime = new MongoBusTimeFormat(time, Integer.parseInt(tempTimeArr[0]), compM);
+					 MongoBusTimeFormat busTime = new MongoBusTimeFormat(time, compH, compM);
 					 choicedBus.add(busTime);
 					 
-				 	}	 
-				 }
-
-			 //현재 시가 더 느릴때, 현재시 12시 /비교시 13시
-			 else if(nowH - compH  > 0 ) {
-				 
-
-				 int tempM = (60 - compM);
-				 if(tempM <= 10) {
-					 
-					 MongoBusTimeFormat busTime = new MongoBusTimeFormat(time, Integer.parseInt(tempTimeArr[0]), compM);
+				 	}else if(!isShuttleBus && minGap > -30 && minGap < 30) {
+				 		
+				 		
+				 	 MongoBusTimeFormat busTime = new MongoBusTimeFormat(time, compH, compM);
 					 choicedBus.add(busTime);
-					 
-					 
-				 } 
-				 
-			//현재 시가 더 빠를때,  현재시 11시 /비교시 12시
-			 }else if(nowH - compH < 0) {
-				 
-
-				 int tempM = (60-nowM) + compM;
-				 
-				 if(tempM <= 10) {
-					 
-					 MongoBusTimeFormat busTime = new MongoBusTimeFormat(time, Integer.parseInt(tempTimeArr[0]), compM);
-					 choicedBus.add(busTime);
-					 
-					 
-				 } 
-				 
-				 
-			 }
-			 
-			 
-			 
+				 		
+				 	}
+ 
 			 }
 		 
 		 
@@ -227,12 +241,43 @@ public class MongoBusService{
 	 }
 	 
 	 
-	 public String GetAllShuttleBusMessage(List<MongoBusTimeFormat> busTable) {
+	 
+	 
+ public String GetTownBusMessage(List<MongoBusTimeFormat> busTable, String station, String bound) {
+		 
+		 String message = station+"-"+bound+" 마을버스 정보라냥. \n\n남산에서 출발하는 버스는 출발시간 +7분 생각하라냥. \n마을버스 시간은 경우에 따라서 바뀔 수 있으니 유의하라냥 \n\n";
+		 
+		 
+		 for(MongoBusTimeFormat time : busTable) {
+			 
+
+			 int choicedH = time.getHour();
+			 int choicedM = time.getMin();
+			 
+			 message += timeFormatter(choicedH, choicedM) + "\n";	 
+		 }
+		 
+		 return message;
+		 
+		 
+		 
+	 }
+	 
+	 
+	 public String GetAllBusMessage(List<MongoBusTimeFormat> busTable, Boolean isShuttleBus, String station, String bound, Boolean isWeekend) {
 		 
 		 
 		 int compH = 0;
 		 int rowJumper = 0;
-		 String message ="부산외대 전체 버스 시간표라냥 \n\n";
+		 String weekend = isWeekend? "주말" : "평일";
+		 String message ="";
+		 if(isShuttleBus) {
+			 message += "부산외대 전체 버스 시간표라냥 \n\n";
+		 }else {
+			 
+			 message += station+"-"+bound+" 마을버스" + weekend +"시간표 정보라냥 \n\n";
+
+		 }
 		 
 		 compH = busTable.get(0).getHour();
 		 

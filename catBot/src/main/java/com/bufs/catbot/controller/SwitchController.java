@@ -84,28 +84,60 @@ public class SwitchController {
 		
 		
 		if(keyParam.contains("전화번호검색")) {
+			
 			message = mongoFindService.findGuide();
 		}
 		else if(keyParam.contains(("#전화#"))) {
-			logger.info("#전화# : " + keyParam);
+			
 			message = mongoService.getCatAnswer("냥냥봇", user_key);
 			
 			Map<String, Object> tempMap = mongoFindService.findPerson(keyParam).get("message");
-			logger.info("tempMap : " + tempMap);
- 
 			message.put("message", tempMap);
 			
 		}else if(keyParam.contains("현재버스(셔틀)")) {
 			
 			message = mongoService.getCatAnswer("냥냥봇", user_key);
-			message.put("message", mongoBusService.getShuttleBusInfo());
+			message.put("message", mongoBusService.getBusInfo("셔틀", null, null));
 			
 		}else if(keyParam.contains("전체시간표(셔틀)")){
 			
 			message = mongoService.getCatAnswer("냥냥봇", user_key);
-			message.put("message", mongoBusService.getAllShuttleBusInfo());
+			message.put("message", mongoBusService.getAllBusInfo("셔틀", null, null));
+			
+		}else if(keyParam.contains("(마버)구서역-외대")){
+			
+			message = mongoService.getCatAnswer("냥냥봇", user_key);
+			message.put("message", mongoBusService.getBusInfo("마버", "구서", "외대"));
+			
+		}else if(keyParam.contains("(마버)외대-구서역")){
+			
+			message = mongoService.getCatAnswer("냥냥봇", user_key);
+			message.put("message", mongoBusService.getBusInfo("마버", "외대", "구서"));
+			
+		}else if(keyParam.contains("(마버)외대-남산역")){
+			
+			message = mongoService.getCatAnswer("냥냥봇", user_key);
+			message.put("message", mongoBusService.getBusInfo("마버", "외대", "남산"));
+			
+		}else if(keyParam.contains("(마버T)구서역-외대")){
+			
+			message = mongoService.getCatAnswer("냥냥봇", user_key);
+			message.put("message", mongoBusService.getAllBusInfo("마버", "구서", "외대"));
+			
+		}else if(keyParam.contains("(마버T)외대-구서역")){
+			
+			message = mongoService.getCatAnswer("냥냥봇", user_key);
+			message.put("message", mongoBusService.getAllBusInfo("마버", "외대", "구서"));
+			
+		}else if(keyParam.contains("(마버T)외대-남산역")){
+			
+			message = mongoService.getCatAnswer("냥냥봇", user_key);
+			message.put("message", mongoBusService.getAllBusInfo("마버", "외대", "남산"));
 			
 		}
+		
+		
+		
 		else {
 			message =  mongoService.getCatAnswer(keyParam, user_key);
 		}
