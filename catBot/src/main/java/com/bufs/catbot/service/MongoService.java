@@ -21,11 +21,6 @@ public class MongoService {
 	@Autowired
 	private MongoDAO mongoDAO;
 	
-	public MongoDTO getAnyway() {
-	
-		return mongoDAO.getAnyway();
-	
-	}
 	
 	
 	//Catbot 기본 대답
@@ -76,6 +71,8 @@ public class MongoService {
 			
 			
 			mongoDAO.removeAllHistory(user_key);
+			
+			return result;
 
 
 			
@@ -111,9 +108,12 @@ public class MongoService {
 			
 			
 		}
-				
-		System.out.println(catAnswer.toString());
-		
+						
+		if(catAnswer.getLevel() < 2) {
+			
+			mongoDAO.removeAllHistory(user_key);
+
+		}else {
 		
 		HistorySession history = new HistorySession();
 		history.setName(catAnswer.getName());
@@ -121,7 +121,8 @@ public class MongoService {
 		history.setTime(new Date());
 		history.setUser_id(user_key);		
 		putHistory(history);
-
+		
+		}
 		
 		System.out.println("나가는 결과,,,");
 		System.out.println(result);

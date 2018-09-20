@@ -28,6 +28,8 @@ public class MongoBusService{
 	public static final int BUFS_SHUTTLE_TERM_BEOMEOSA = 7;
 	public static final int BUFS_SHUTTLE_TERM_NAMSAN = 10;
 	public static final int BUFS_SHUTTLE_TERM_FIRESTATION = 13;
+	public static final int BUFS_TOWNBUS_TERM_BOUND_NAMSAN = 6;
+
 
 	
 
@@ -245,7 +247,7 @@ public class MongoBusService{
 	 
  public String GetTownBusMessage(List<MongoBusTimeFormat> busTable, String station, String bound) {
 		 
-		 String message = station+"-"+bound+" 마을버스 정보라냥. \n\n남산에서 출발하는 버스는 출발시간 +7분 생각하라냥. \n마을버스 시간은 경우에 따라서 바뀔 수 있으니 유의하라냥 \n\n";
+		 String message = station+"-"+bound+" 마을버스 정보라냥. \n\n남산역에서 출발하는 버스는 시간이 정확하지 않다냥. 보통 외대에서 출발후에 6분에서 10분 정도 걸린다냥 \n마을버스 시간은 경우에 따라서 바뀔 수 있으니 유의하라냥 \n\n";
 		 
 		 
 		 for(MongoBusTimeFormat time : busTable) {
@@ -254,7 +256,15 @@ public class MongoBusService{
 			 int choicedH = time.getHour();
 			 int choicedM = time.getMin();
 			 
+			
 			 message += timeFormatter(choicedH, choicedM) + "\n";	 
+			 
+			 if(station.contains("외대") && bound.contains("남산")) {
+				 
+				 message += "남산역 도착 예상시간 " + timeFormatter(choicedH, choicedM + BUFS_TOWNBUS_TERM_BOUND_NAMSAN) + "\n\n";
+			 }
+
+			 
 		 }
 		 
 		 return message;

@@ -41,8 +41,22 @@ public class MongoFindService {
 		
 		Map<String, Map<String, Object>> result = new HashMap<String, Map<String,Object>>();
 		Map<String, Object> message = new HashMap<String, Object>();
+		String resultScript = "";
+
 		
 		String rawStr = key.replace("#전화#", "");
+		
+		if(rawStr.trim().length() < 2) {
+			
+			resultScript = "2글자 이상 입력하라냥.";
+			message.put("text", resultScript);
+			result.put("message", message);
+
+			return result;
+
+			
+		}
+		
 		String[] temp = rawStr.split(" ");
 		List<String> keywords = new ArrayList<String>();
 		
@@ -55,13 +69,8 @@ public class MongoFindService {
 		
 		System.out.println("keywords : " + keywords);
 		
-		
 		List<MongoFindDTO> peoples = findDAO.findPeople(keywords);
-		
-		
-		
-		String resultScript = "";
-		
+
 		for(MongoFindDTO people : peoples) {
 		resultScript += 
 				"이름 : " + people.get이름() + "\n" +
@@ -70,9 +79,6 @@ public class MongoFindService {
 				"위치 : " + people.get위치() + "\n" +
 				"----------------------------------\n";
 
-
-		
-		
 		}
 		
 		if(resultScript.trim().length()<1) {
@@ -83,10 +89,7 @@ public class MongoFindService {
 		
 		message.put("text", resultScript);
 		result.put("message", message);
-		
-		
-		
-		
+
 		return result;
 		
 	}

@@ -21,7 +21,7 @@ public class MongoDAO {
 	private MongoTemplate mongoTemplate;
 	
 	
-	public MongoDTO getAnyway() {
+	public MongoDTO getDefaultMessage() {
 		
 	
 		Criteria criteria = new Criteria("name").is("냥냥봇");

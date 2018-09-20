@@ -1,7 +1,6 @@
 package com.bufs.catbot.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bufs.catbot.service.MongoBusService;
+import com.bufs.catbot.service.MongoCrawlingService;
 import com.bufs.catbot.service.MongoFindService;
 import com.bufs.catbot.service.MongoService;
 
@@ -33,6 +33,10 @@ public class SwitchController {
 	@Autowired
 	private MongoBusService mongoBusService;
 	
+	
+	@Autowired
+	private MongoCrawlingService mongoCrawlingService;
+	
 	private static final Logger logger = LoggerFactory.getLogger(SwitchController.class);
 	
 	
@@ -47,8 +51,6 @@ public class SwitchController {
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home() {
 		logger.info("Front Contoller 진입, MongoDB connection test...");
-	
-		
 		return "home";
 	}
 	
@@ -62,7 +64,7 @@ public class SwitchController {
 		
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("type", "buttons");
-		param.put("buttons", (List<String>)mongoService.getAnyway().getValue());
+		param.put("buttons", mongoService.getDefaultList());
 		
 		
 		
@@ -133,6 +135,11 @@ public class SwitchController {
 			
 			message = mongoService.getCatAnswer("냥냥봇", user_key);
 			message.put("message", mongoBusService.getAllBusInfo("마버", "외대", "남산"));
+			
+		}else if(keyParam.contains("학식정보")) {
+			
+			mongoCrawlingService.CrawlMealTable();
+			
 			
 		}
 		
