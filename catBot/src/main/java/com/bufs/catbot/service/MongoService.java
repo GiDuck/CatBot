@@ -50,7 +50,7 @@ public class MongoService {
 			param.put("type", "buttons");
 			param.put("buttons", getDefaultList());
 
-			String script = "";
+			StringBuffer script = new StringBuffer();
 			Map<String, String> terminalMap = (Map<String, String>)catAnswer.getValue();
 			
 			Iterator<String> itr = terminalMap.keySet().iterator();
@@ -58,14 +58,11 @@ public class MongoService {
 			while(itr.hasNext()) {
 				
 				String itrKey = itr.next();
-				
-				script += itrKey + ":" + terminalMap.get(itrKey) + "\n";
-				
-				script = script.replace("null", "");
+				script.append(itrKey).append(" : ").append(terminalMap.get(itrKey)).append("\n");
 				
 			}
 			
-			message.put("text", script);
+			message.put("text", script.toString().replace("null", ""));
 			result.put("message", message);
 			result.put("keyboard", param);
 			

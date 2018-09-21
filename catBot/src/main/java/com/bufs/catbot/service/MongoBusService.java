@@ -216,7 +216,7 @@ public class MongoBusService{
 	 //건네 받은 셔틀버스 목록을 메시지로 바꿔주는 메소드
 	 public String GetShuttleBusMessage(List<MongoBusTimeFormat> busTable) {
 		 
-		 String message = "부산외대 셔틀 버스 정보라냥. \n출발시간 제외하고는 도로사정에 따라서 1~3분정도 차이가 날 수 있다냥. \n버스가 안온다고 날 탓하지 말라냥!! \n\n";
+		 StringBuffer message = new StringBuffer("부산외대 셔틀 버스 정보라냥. \n출발시간 제외하고는 도로사정에 따라서 1~3분정도 차이가 날 수 있다냥. \n버스가 안온다고 날 탓하지 말라냥!! \n\n");
 		 
 		 
 		 for(MongoBusTimeFormat time : busTable) {
@@ -225,18 +225,18 @@ public class MongoBusService{
 			 int choicedH = time.getHour();
 			 int choicedM = time.getMin();
 			 
-			 message += "외대에서 출발 " + timeFormatter(choicedH, choicedM) + "\n" +
-					 	"외성생활관 " + timeFormatter(choicedH, choicedM+BUFS_SHUTTLE_TERM_DOMI) + "\n" +
-					 	"범어사역 " + timeFormatter(choicedH, choicedM+BUFS_SHUTTLE_TERM_BEOMEOSA) + "\n" +
-					 	"남산역 " + timeFormatter(choicedH, choicedM+BUFS_SHUTTLE_TERM_NAMSAN) + "\n" +
-					 	"남산소방서 " + timeFormatter(choicedH, choicedM+BUFS_SHUTTLE_TERM_FIRESTATION) + "\n" +
-					 	"----------------------------------- \n";			 
+			 message.append("외대에서 출발 ").append(timeFormatter(choicedH, choicedM)).append("\n")
+			 .append("외성생활관 ").append(timeFormatter(choicedH, choicedM+BUFS_SHUTTLE_TERM_DOMI)).append("\n")
+			 .append("범어사역 ").append(timeFormatter(choicedH, choicedM+BUFS_SHUTTLE_TERM_BEOMEOSA)).append("\n")
+			 .append("남산역 ").append(timeFormatter(choicedH, choicedM+BUFS_SHUTTLE_TERM_NAMSAN)).append("\n")
+			 .append("남산소방서 ").append(timeFormatter(choicedH, choicedM+BUFS_SHUTTLE_TERM_FIRESTATION)).append("\n")
+			 .append("----------------------------------- \n");			 
 			 
 		 }
 		 
 		 
 		 
-		 return message;
+		 return message.toString();
 		 
 		 
 		 
@@ -280,12 +280,12 @@ public class MongoBusService{
 		 int compH = 0;
 		 int rowJumper = 0;
 		 String weekend = isWeekend? "주말" : "평일";
-		 String message ="";
+		 StringBuffer message =new StringBuffer();
 		 if(isShuttleBus) {
-			 message += "부산외대 전체 버스 시간표라냥 \n\n";
+			 message.append("부산외대 전체 버스 시간표라냥 \n\n");
 		 }else {
 			 
-			 message += station+"-"+bound+" 마을버스" + weekend +"시간표 정보라냥 \n\n";
+			 message.append(station).append("-").append(bound).append(" 마을버스 ").append(weekend).append("시간표 정보라냥 \n\n");
 
 		 }
 		 
@@ -296,25 +296,26 @@ public class MongoBusService{
 		 for(MongoBusTimeFormat time : busTable) {
 			
 			 if(compH != time.getHour()){
-				 message += "\n"; 
+				 message.append("\n"); 
 				 compH = time.getHour();
 				 rowJumper = 0;
+				 
 			 }
 			 
 			 rowJumper++;
 			 
 			
 			 
-			 message += time.getTime() +" ";
+			 message.append(time.getTime()).append(" ");
 			 
 			 if(rowJumper % 5 == 0) {
 				 
-				 message += "\n"; 
+				 message.append("\n"); 
 			 }
 		 }
 		 
 		 
-		 return message;
+		 return message.toString();
 		 
 	 }
 	 

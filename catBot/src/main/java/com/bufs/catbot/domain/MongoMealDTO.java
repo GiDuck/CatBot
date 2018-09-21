@@ -65,6 +65,14 @@ public class MongoMealDTO {
 		this.endTime = endTime;
 	}
 	
+	@Override
+	public String toString() {
+		return "MongoMealDTO [id=" + id + ", restaurantType=" + restaurantType + ", menu=" + menu + ", date=" + date
+				+ ", content=" + content + ", price=" + price + ", startTime=" + startTime + ", endTime=" + endTime
+				+ "]";
+	}
+	
+	
 	
 	
 	

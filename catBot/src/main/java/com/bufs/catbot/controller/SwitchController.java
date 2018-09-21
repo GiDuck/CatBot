@@ -34,6 +34,7 @@ public class SwitchController {
 	private MongoBusService mongoBusService;
 	
 	
+	
 	@Autowired
 	private MongoCrawlingService mongoCrawlingService;
 	
@@ -85,6 +86,7 @@ public class SwitchController {
 		logger.info(keyParam + " " + user_key);
 		
 		
+		
 		if(keyParam.contains("전화번호검색")) {
 			
 			message = mongoFindService.findGuide();
@@ -96,7 +98,22 @@ public class SwitchController {
 			Map<String, Object> tempMap = mongoFindService.findPerson(keyParam).get("message");
 			message.put("message", tempMap);
 			
-		}else if(keyParam.contains("현재버스(셔틀)")) {
+		}else if(keyParam.contains(("도서검색"))) {
+			
+			message = mongoFindService.findBookGuide();
+			
+		}
+		
+		else if(keyParam.contains(("#도서#"))) {
+			
+			message = mongoService.getCatAnswer("냥냥봇", user_key);
+			
+			Map<String, Object> tempMap = mongoFindService.findBook(keyParam).get("message");
+			message.put("message", tempMap);
+			
+		}
+		
+		else if(keyParam.contains("현재버스(셔틀)")) {
 			
 			message = mongoService.getCatAnswer("냥냥봇", user_key);
 			message.put("message", mongoBusService.getBusInfo("셔틀", null, null));
@@ -136,15 +153,25 @@ public class SwitchController {
 			message = mongoService.getCatAnswer("냥냥봇", user_key);
 			message.put("message", mongoBusService.getAllBusInfo("마버", "외대", "남산"));
 			
-		}else if(keyParam.contains("학식정보")) {
+		}else if(keyParam.contains("기숙사식당")) {
 			
-			mongoCrawlingService.CrawlMealTable();
+			message = mongoService.getCatAnswer("냥냥봇", user_key);
+			message.put("message", mongoCrawlingService.getTodayMenu("기숙사식당"));
+		}else if(keyParam.contains("교직원식당")) {
 			
-			
+			message = mongoService.getCatAnswer("냥냥봇", user_key);
+			message.put("message", mongoCrawlingService.getTodayMenu("교직원식당"));
 		}
 		
+		else if(keyParam.contains("학생식당K")) {
+			message = mongoService.getCatAnswer("냥냥봇", user_key);
+			message.put("message", mongoCrawlingService.getTodayMenu("학생식당K"));
 		
-		
+		}else if(keyParam.contains("학생식당O")) {
+			
+			message = mongoService.getCatAnswer("냥냥봇", user_key);
+			message.put("message", mongoCrawlingService.getTodayMenu("학생식당O"));
+		}		
 		else {
 			message =  mongoService.getCatAnswer(keyParam, user_key);
 		}

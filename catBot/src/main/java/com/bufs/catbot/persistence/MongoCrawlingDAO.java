@@ -50,9 +50,10 @@ public class MongoCrawlingDAO {
 	public Boolean checkExistMealInfo(String token, String date) {
 		
 		
-		Criteria criteria = new Criteria("date");
-		criteria.is(date);
+		Criteria criteria = new Criteria("restaurantType");
+		criteria.is(token);
 		Query query = new Query(criteria);
+		query.addCriteria(new Criteria().andOperator(Criteria.where("date").is(date)));
 		List<MongoMealDTO> mealTable = mongoTemplate.find(query, MongoMealDTO.class, "catMeal");
 		
 		if(mealTable.size()!=0) {
