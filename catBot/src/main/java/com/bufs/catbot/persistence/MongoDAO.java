@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
+import com.bufs.catbot.domain.CatRequestForm;
 import com.bufs.catbot.domain.HistorySession;
 import com.bufs.catbot.domain.MongoDTO;
 
@@ -114,6 +115,14 @@ public class MongoDAO {
 		
 	}
 	
+	
+	public void insertCatRequest(CatRequestForm form) {
+		
+		
+		mongoTemplate.insert(form, "catDialogue");
+		
+		
+	}
 	
 	
 	

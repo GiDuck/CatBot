@@ -6,6 +6,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -58,7 +59,7 @@ public class SwitchController {
 	
 	
 
-
+	//맨 처음에 키보드가 init 되는 요청
 	@ResponseBody
 	@RequestMapping(value="/keyboard", method=RequestMethod.GET)
 	public Map<String, Object> keyboard() {
@@ -66,9 +67,6 @@ public class SwitchController {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("type", "buttons");
 		param.put("buttons", mongoService.getDefaultList());
-		
-		
-		
 		return param;
 	}
 	
@@ -82,23 +80,21 @@ public class SwitchController {
 		
 		String keyParam = (String)(reqParam.get("content"));
 		String user_key = (String)(reqParam.get("user_key"));
-		
-		logger.info(keyParam + " " + user_key);
-		
+				
 		
 		
 		if(keyParam.contains("전화번호검색")) {
 			
 			message = mongoFindService.findGuide();
 		}
-		else if(keyParam.contains(("#전화#"))) {
+		else if(keyParam.contains("#전화#")) {
 			
 			message = mongoService.getCatAnswer("냥냥봇", user_key);
 			
 			Map<String, Object> tempMap = mongoFindService.findPerson(keyParam).get("message");
 			message.put("message", tempMap);
 			
-		}else if(keyParam.contains(("도서검색"))) {
+		}else if(keyParam.contains("도서검색")) {
 			
 			message = mongoFindService.findBookGuide();
 			
@@ -112,7 +108,16 @@ public class SwitchController {
 			message.put("message", tempMap);
 			
 		}
-		
+		else if(keyParam.equals("냥냥봇에게 말하기")) {
+			
+			message = mongoService.catRequestForm();
+
+		}else if(keyParam.contains("#냥냥#")) {
+			
+			message = mongoService.getCatAnswer("냥냥봇", user_key);
+			Map<String, Object> tempMap = mongoService.catRequestSomething(keyParam, user_key).get("message");
+			message.put("message", tempMap);
+		}		
 		else if(keyParam.contains("현재버스(셔틀)")) {
 			
 			message = mongoService.getCatAnswer("냥냥봇", user_key);
@@ -175,13 +180,21 @@ public class SwitchController {
 		else {
 			message =  mongoService.getCatAnswer(keyParam, user_key);
 		}
-		
-		
-		logger.info("최종 응답 메시지 : " + message);
-		
+
 		
 		
 		return message;
+	}
+	
+	
+	
+	//매주 월,화,수 오후 12시에 학식 페이지에서 메뉴를 들고와 DB에 넣어주는 스케쥴러
+	@Scheduled(cron = "0 0 12 ? ? 1-3")
+	public void CrawlMealInfo() {
+			
+		mongoCrawlingService.CrawlMealTable();
+
+		
 	}
 	
 	
