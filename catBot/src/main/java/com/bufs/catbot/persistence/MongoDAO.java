@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
+import com.bufs.catbot.domain.CatRequestForm;
 import com.bufs.catbot.domain.HistorySession;
 import com.bufs.catbot.domain.MongoDTO;
 
@@ -21,7 +22,7 @@ public class MongoDAO {
 	private MongoTemplate mongoTemplate;
 	
 	
-	public MongoDTO getAnyway() {
+	public MongoDTO getDefaultMessage() {
 		
 	
 		Criteria criteria = new Criteria("name").is("냥냥봇");
@@ -92,7 +93,6 @@ public class MongoDAO {
 		try {
 			Criteria criteria = new Criteria("user_id").is(user_key);
 			Query query = new Query(criteria);
-			
 			mongoTemplate.remove(query, "catBackHistory");		
 			
 		}catch(Exception e) {
@@ -105,7 +105,7 @@ public class MongoDAO {
 		
 		
 		try {
-			
+
 			mongoTemplate.remove(history, "catBackHistory");		
 			
 		}catch(Exception e) {
@@ -114,6 +114,14 @@ public class MongoDAO {
 		
 	}
 	
+	
+	public void insertCatRequest(CatRequestForm form) {
+		
+		
+		mongoTemplate.insert(form, "catDialogue");
+		
+		
+	}
 	
 	
 	

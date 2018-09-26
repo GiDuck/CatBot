@@ -10,6 +10,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.bufs.catbot.domain.CatRequestForm;
 import com.bufs.catbot.domain.HistorySession;
 import com.bufs.catbot.domain.MongoDTO;
 import com.bufs.catbot.persistence.MongoDAO;
@@ -21,15 +22,12 @@ public class MongoService {
 	@Autowired
 	private MongoDAO mongoDAO;
 	
-	public MongoDTO getAnyway() {
-	
-		return mongoDAO.getAnyway();
-	
-	}
 	
 	
 	//Catbot 기본 대답
 	public Map<String, Map<String, Object>> getCatAnswer(String key, String user_key) {
+		
+		boolean isBackTacking = false;
 		
 		Map<String, Map<String, Object>> result = new HashMap<String, Map<String,Object>>();
 		Map<String, Object> param = new HashMap<String, Object>();
@@ -38,7 +36,9 @@ public class MongoService {
 	
 		if(key.equals("뒤로가기")) {
 			key = popHistory(user_key);
+			isBackTacking = true;	
 		}
+		
 		
 
 		MongoDTO catAnswer = mongoDAO.getCatAnswer(key);
@@ -55,7 +55,7 @@ public class MongoService {
 			param.put("type", "buttons");
 			param.put("buttons", getDefaultList());
 
-			String script = "";
+			StringBuffer script = new StringBuffer();
 			Map<String, String> terminalMap = (Map<String, String>)catAnswer.getValue();
 			
 			Iterator<String> itr = terminalMap.keySet().iterator();
@@ -63,19 +63,18 @@ public class MongoService {
 			while(itr.hasNext()) {
 				
 				String itrKey = itr.next();
-				
-				script += itrKey + ":" + terminalMap.get(itrKey) + "\n";
-				
-				script = script.replace("null", "");
+				script.append(itrKey).append(" : ").append(terminalMap.get(itrKey)).append("\n");
 				
 			}
 			
-			message.put("text", script);
+			message.put("text", script.toString().replace("null", ""));
 			result.put("message", message);
 			result.put("keyboard", param);
 			
 			
 			mongoDAO.removeAllHistory(user_key);
+			
+			return result;
 
 
 			
@@ -111,26 +110,30 @@ public class MongoService {
 			
 			
 		}
-				
-		System.out.println(catAnswer.toString());
-		
-		
-		HistorySession history = new HistorySession();
-		history.setName(catAnswer.getName());
-		history.setLevel(catAnswer.getLevel());
-		history.setTime(new Date());
-		history.setUser_id(user_key);		
-		putHistory(history);
+						
+		if(catAnswer.getLevel() < 2) {
+			
+			mongoDAO.removeAllHistory(user_key);
 
+		}
+		
+		
+			
+			if(!isBackTacking) {
+				
+			HistorySession history = new HistorySession();
+			history.setName(catAnswer.getName());
+			history.setLevel(catAnswer.getLevel());
+			history.setTime(new Date());
+			history.setUser_id(user_key);		
+			putHistory(history);
+			
+			}
+		
 		
 		System.out.println("나가는 결과,,,");
 		System.out.println(result);
 	
-		
-		
-		
-		
-		
 		return result;
 	
 	}
@@ -218,5 +221,57 @@ public class MongoService {
 	}
 	
 	
+	
+	public Map<String, Map<String, Object>> catRequestForm(){
+		
+		Map<String, Map<String, Object>> result = new HashMap<String, Map<String,Object>>();
+		Map<String, Object> message = new HashMap<String, Object>();
+		
+		message.put("text", "반갑다냥. 내가 그동안 많이 알려줬겠지만 부족한 것이 있을꺼라고 생각한다냥.\n 혹시 나에게 말하고 싶거나 건의하고 싶은게 있으면 얼마든지 말하라냥\n 개인 정보는 저장되지 않으니 안심하라냥.\n"
+				+ "규칙을 알려주겠다냥. #냥냥# 이라고 앞에 붙이고 할 말을 쓰라냥. \n"
+				+ "예를 들면 #냥냥#안녕 냥냥봇, #냥냥#냥냥펀치 이런 식으로 쓰라냥. \n 많은 의견을 기대하겠다냥. 고맙다냥. ");
+		
+		result.put("message", message);
+		
+		return result;
+		
+		
+		
+	}
+	
+	
+	public  Map<String, Map<String, Object>> catRequestSomething(String key, String user_key){
+		
+		key = key.replace("#냥냥#", "");
+
+		
+		Map<String, Map<String, Object>> result = new HashMap<String, Map<String,Object>>();
+		Map<String, Object> message = new HashMap<String, Object>();
+		String resultStr = "";
+		
+		if(key.trim().length()<1) {
+			resultStr="한 글자이상 입력하라냥";
+		}else {
+			
+			CatRequestForm form = new CatRequestForm();
+			form.setUser_key(user_key);
+			form.setContent(key);
+			form.setDate(new Date().toString());
+			
+			mongoDAO.insertCatRequest(form);
+			
+			resultStr ="냥냥!";
+		}
+		
+		
+		message.put("text", resultStr);
+		result.put("message", message);	
+	
+	
+		return result;
+	
+	
+	
+	}
 	
 }
