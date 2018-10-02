@@ -37,6 +37,7 @@ public class MongoCrawlingService {
 	
 	public void CrawlMealTable() {
 		
+		System.out.println("logging point check 1");
 		ChromeOptions chromeOptions = new ChromeOptions();
         chromeOptions.addArguments("--headless");
         chromeOptions.addArguments("--no-sandbox");
