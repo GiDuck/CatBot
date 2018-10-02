@@ -7,7 +7,9 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-2.0.xsd
 		http://www.springframework.org/schema/task 
-		http://www.springframework.org/schema/task/spring-task.xsdb">
+		http://www.springframework.org/schema/task/spring-task-3.1.xsd"
+		
+		>
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	
