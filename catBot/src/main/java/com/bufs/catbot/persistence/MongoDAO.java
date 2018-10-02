@@ -93,7 +93,6 @@ public class MongoDAO {
 		try {
 			Criteria criteria = new Criteria("user_id").is(user_key);
 			Query query = new Query(criteria);
-			
 			mongoTemplate.remove(query, "catBackHistory");		
 			
 		}catch(Exception e) {
@@ -106,7 +105,7 @@ public class MongoDAO {
 		
 		
 		try {
-			
+
 			mongoTemplate.remove(history, "catBackHistory");		
 			
 		}catch(Exception e) {

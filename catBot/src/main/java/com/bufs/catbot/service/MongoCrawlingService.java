@@ -64,7 +64,6 @@ public class MongoCrawlingService {
 	    //학생식당K 학식 정보 가져오기
 	    new Select(driver.findElement(By.id("ddl식당"))).selectByVisibleText("학생식당 K");  
 	    Thread.sleep(500); //시간 500밀리세컨드 동안 슬립
-	    
 		BatchInsert(element);
 
 
@@ -72,9 +71,7 @@ public class MongoCrawlingService {
 	    
 	    //학생식당O 학식 정보 가져오기
 	    new Select(driver.findElement(By.id("ddl식당"))).selectByVisibleText("학생식당 O");
-
 	    Thread.sleep(500);
-	    
 		BatchInsert(element);
 
 
@@ -100,6 +97,14 @@ public class MongoCrawlingService {
 		String nowDateStr = dateFormat.format(today);
 		
 		List<MongoMealDTO> meals = mongoCrawlingDAO.getMealInfo(token, nowDateStr);
+		
+		if(meals == null || meals.size()== 0)
+		{
+			result.put("text", "학식 정보가 없다냥");
+			
+			return result;
+			
+		}
 		
 		StringBuffer messageBuffer = new StringBuffer("오늘 날짜 : ").append(nowDateStr).append("\n");
 		messageBuffer.append("여기는 ").append(meals.get(0).getRestaurantType()).append(" 이라냥 \n\n");

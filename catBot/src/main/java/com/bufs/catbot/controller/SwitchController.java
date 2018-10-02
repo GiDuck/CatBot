@@ -77,7 +77,6 @@ public class SwitchController {
 		
 		
 		Map<String, Map<String, Object>> message = new HashMap<String, Map<String, Object>>();
-		
 		String keyParam = (String)(reqParam.get("content"));
 		String user_key = (String)(reqParam.get("user_key"));
 				

@@ -27,6 +27,8 @@ public class MongoService {
 	//Catbot 기본 대답
 	public Map<String, Map<String, Object>> getCatAnswer(String key, String user_key) {
 		
+		boolean isBackTacking = false;
+		
 		Map<String, Map<String, Object>> result = new HashMap<String, Map<String,Object>>();
 		Map<String, Object> param = new HashMap<String, Object>();
 		Map<String, Object> message = new HashMap<String, Object>();
@@ -34,7 +36,9 @@ public class MongoService {
 	
 		if(key.equals("뒤로가기")) {
 			key = popHistory(user_key);
+			isBackTacking = true;	
 		}
+		
 		
 
 		MongoDTO catAnswer = mongoDAO.getCatAnswer(key);
@@ -111,16 +115,21 @@ public class MongoService {
 			
 			mongoDAO.removeAllHistory(user_key);
 
-		}else {
-		
-		HistorySession history = new HistorySession();
-		history.setName(catAnswer.getName());
-		history.setLevel(catAnswer.getLevel());
-		history.setTime(new Date());
-		history.setUser_id(user_key);		
-		putHistory(history);
-		
 		}
+		
+		
+			
+			if(!isBackTacking) {
+				
+			HistorySession history = new HistorySession();
+			history.setName(catAnswer.getName());
+			history.setLevel(catAnswer.getLevel());
+			history.setTime(new Date());
+			history.setUser_id(user_key);		
+			putHistory(history);
+			
+			}
+		
 		
 		System.out.println("나가는 결과,,,");
 		System.out.println(result);
