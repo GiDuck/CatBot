@@ -188,7 +188,7 @@ public class SwitchController {
 	
 	
 	//매주 월,화,수 오후 12시에 학식 페이지에서 메뉴를 들고와 DB에 넣어주는 스케쥴러
-	@Scheduled(cron = "0 55 14 * * MON-FRI")
+	@Scheduled(cron = "0 5 15 * * *")
 	public void CrawlMealInfo() {
 			
 		mongoCrawlingService.CrawlMealTable();
