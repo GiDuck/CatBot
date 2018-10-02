@@ -11,6 +11,7 @@
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	
+	<import resource="classpath:/context-scheduler.xml"/>
 
 
 <mongo:mongo-client id="mongo" host="127.0.0.1" port="27777" credentials="gdtbgl93:kim1234@admin">
@@ -34,6 +35,9 @@ socket-timeout="1500"
 <constructor-arg ref="mongo"/>
 <constructor-arg name="databaseName" value="catbot"/>
 </bean>
+
+
+
 
 		
 		
