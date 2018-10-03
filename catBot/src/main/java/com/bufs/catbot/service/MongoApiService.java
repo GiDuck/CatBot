@@ -31,7 +31,7 @@ public class MongoApiService {
 				
 				System.out.println("지금 들고온 휴일 정보는...");
 				
-				List<HolidayItemDTO> items = response.getBody();
+				List<HolidayItemDTO> items = response.getBody().getItems();
 								
 				for(HolidayItemDTO item : items) {
 					
