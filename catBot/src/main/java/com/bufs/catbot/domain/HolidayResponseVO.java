@@ -32,6 +32,12 @@ public class HolidayResponseVO {
 	public void setBody(List<HolidayItemDTO> body) {
 		this.body = body;
 	}
+
+	@Override
+	public String toString() {
+		return "HolidayResponseVO [header=" + header + ", body=" + body + "]";
+	}
+	
 	
 	
 	
