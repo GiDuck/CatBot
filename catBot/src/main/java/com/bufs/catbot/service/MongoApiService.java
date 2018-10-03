@@ -52,6 +52,7 @@ public class MongoApiService {
 				
 				date = item.getLocdate().substring(0, 4) + "-" + item.getLocdate().substring(4, 6) + "-" + item.getLocdate().substring(6, 8);
 				
+				exsistDate = false;
 				exsistDate = mongoDAO.findHoliday(date);
 				boolean schooleExsistDate = mongoDAO.findUniversityHoliday(date);
 				
@@ -60,7 +61,7 @@ public class MongoApiService {
 				System.out.println("학교 공휴일 존재 ? " + schooleExsistDate);
 				
 				
-				if(!item.getIsHoliday().equals("Y") || !exsistDate)
+				if(!item.getIsHoliday().equals("Y") || exsistDate)
 					continue;
 				
 				

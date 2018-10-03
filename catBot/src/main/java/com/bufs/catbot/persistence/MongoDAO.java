@@ -142,7 +142,7 @@ public class MongoDAO {
 		
 		
 		Criteria criteria = new Criteria("date");
-		criteria.equals(date);
+		criteria.is(date);
 		Query query = new Query(criteria);
 		boolean isExsist = mongoTemplate.exists(query, "catHoliday");
 		
