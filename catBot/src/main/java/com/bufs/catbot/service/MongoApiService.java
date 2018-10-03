@@ -1,5 +1,7 @@
 package com.bufs.catbot.service;
 
+import java.net.URI;
+
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -30,10 +32,8 @@ public class MongoApiService {
 						.queryParams(params).build().toString();*/
 										
 				
-				String requestURI = holidayURL + "?ServiceKey="+ serviceKey + "&solYear=2018&" + "solMonth=" + solMonth;
+				URI requestURI = new URI(holidayURL + "?ServiceKey="+ serviceKey + "&solYear=2018&" + "solMonth=" + solMonth);
 				
-				System.out.println("요청하는 URL은.. " + requestURI);
-
 				String value = restTemplate.getForObject(requestURI, String.class);
 
 				System.out.println("지금 들고온 휴일 정보는...");
