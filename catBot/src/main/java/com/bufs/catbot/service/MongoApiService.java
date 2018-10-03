@@ -53,7 +53,8 @@ public class MongoApiService {
 				
 				holiday = new HashMap<>();
 				holiday.put("date", item.getLocdate().substring(1, 4) + "-" + item.getLocdate().substring(5, 6) + "-" + item.getLocdate().substring(7, 8));
-				holiday.put("name", "공휴일");
+				holiday.put("name", item.getDateName());
+				holiday.put("type", "공휴일");
 			
 				holidayInfos.add(holiday);
 				
