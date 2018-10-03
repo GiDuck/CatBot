@@ -8,9 +8,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.bufs.catbot.domain.HolidayItemDTO;
-import com.bufs.catbot.domain.HolidayItemsDTO;
-
 @Service
 public class MongoApiService {
 
@@ -37,14 +34,17 @@ public class MongoApiService {
 				
 				System.out.println("요청하는 URL은.. " + requestURI.toString());
 
-				HolidayItemsDTO items = restTemplate.getForObject(requestURI, HolidayItemsDTO.class);
+				String value = restTemplate.getForObject(requestURI, String.class);
 
-				for (HolidayItemDTO item : items.getHolidayItemDTOs()) {
+				System.out.println("지금 들고온 휴일 정보는...");
+				System.out.println(value);
+				
+/*				for (HolidayItemDTO item : items.getHolidayItemDTOs()) {
 
 					System.out.println("지금 들고온 휴일 정보는...");
 					System.out.println(item.toString());
 
-				}
+				}*/
 
 			} catch (Exception e) {
 				e.printStackTrace();

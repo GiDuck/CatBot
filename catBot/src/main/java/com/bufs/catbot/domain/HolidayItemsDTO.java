@@ -6,14 +6,13 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name="items")
+@XmlRootElement(name="response")
 public class HolidayItemsDTO {
 	
-	private List<HolidayItemDTO> HolidayItemDTOs;
-
-
 	@XmlElementWrapper(name="items")
 	@XmlElement(name="item")
+	private List<HolidayItemDTO> HolidayItemDTOs;
+
 	public List<HolidayItemDTO> getHolidayItemDTOs() {
 		return HolidayItemDTOs;
 	}
@@ -21,9 +20,6 @@ public class HolidayItemsDTO {
 	public void setHolidayItemDTOs(List<HolidayItemDTO> holidayItemDTOs) {
 		HolidayItemDTOs = holidayItemDTOs;
 	}
-	
-
-
 		
 		
 		
