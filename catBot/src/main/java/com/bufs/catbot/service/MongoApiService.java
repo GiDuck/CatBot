@@ -42,7 +42,7 @@ public class MongoApiService {
 				Map<String, Object> value = (Map<String, Object>)restTemplate.getForObject(requestURI, Map.class);		
 				
 				System.out.println("지금 들고온 휴일 정보는...");
-				List<HolidayItemDTO> items = ((HolidayItemsDTO)value.get("body")).getItems();
+				List<HolidayItemDTO> items = ((HolidayItemsDTO)((Map<String, Object>)value.get("body")).get("items")).getItems();
 				
 				for(HolidayItemDTO item : items) {
 					
