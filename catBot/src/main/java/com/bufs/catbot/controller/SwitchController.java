@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.bufs.catbot.service.MongoApiService;
 import com.bufs.catbot.service.MongoBusService;
 import com.bufs.catbot.service.MongoCrawlingService;
 import com.bufs.catbot.service.MongoFindService;
@@ -33,6 +34,9 @@ public class SwitchController {
 	
 	@Autowired
 	private MongoBusService mongoBusService;
+	
+	@Autowired
+	private MongoApiService mongoApiService;
 	
 	
 	
@@ -184,6 +188,19 @@ public class SwitchController {
 		
 		return message;
 	}
+	
+	
+	@RequestMapping("/setHolidayInfo")
+	public void setHolidayInfo () {
+		
+		
+		mongoApiService.requestHolidayInfo();
+		
+		
+		
+	}
+	
+	
 	
 	
 	
