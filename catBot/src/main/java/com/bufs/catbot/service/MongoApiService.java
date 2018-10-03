@@ -4,8 +4,6 @@ import java.net.URI;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import com.bufs.catbot.domain.HolidayItemDTO;
@@ -27,11 +25,6 @@ public class MongoApiService {
 			
 			try {
 				
-				MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-				params.add("ServiceKey", serviceKey);
-				params.add("solYear", "2018");
-				params.add("solMonth", solMonth);
-
 				URI requestURI = new URI(holidayURL + "?ServiceKey="+ serviceKey + "&solYear=2018&" + "solMonth=" + solMonth);
 				
 				HolidayResponseVO response = restTemplate.getForObject(requestURI, HolidayResponseVO.class);		
@@ -46,13 +39,7 @@ public class MongoApiService {
 					
 				}
 				
-				
-/*				for (HolidayItemDTO item : items.getHolidayItemDTOs()) {
 
-					System.out.println("지금 들고온 휴일 정보는...");
-					System.out.println(item.toString());
-
-				}*/
 
 			} catch (Exception e) {
 				e.printStackTrace();
