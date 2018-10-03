@@ -2,7 +2,6 @@ package com.bufs.catbot.service;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -10,7 +9,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import com.bufs.catbot.domain.HolidayItemDTO;
-import com.bufs.catbot.domain.HolidayItemsDTO;
+import com.bufs.catbot.domain.HolidayResponseVO;
 
 @Service
 public class MongoApiService {
@@ -32,22 +31,15 @@ public class MongoApiService {
 				params.add("ServiceKey", serviceKey);
 				params.add("solYear", "2018");
 				params.add("solMonth", solMonth);
-				
-/*				String requestURI = UriComponentsBuilder.fromHttpUrl(holidayURL)
-						.queryParams(params).build().toString();*/
-										
-				
+
 				URI requestURI = new URI(holidayURL + "?ServiceKey="+ serviceKey + "&solYear=2018&" + "solMonth=" + solMonth);
 				
-				Map<String, Object> value = (Map<String, Object>)restTemplate.getForObject(requestURI, Map.class);		
+				HolidayResponseVO response = restTemplate.getForObject(requestURI, HolidayResponseVO.class);		
 				
 				System.out.println("지금 들고온 휴일 정보는...");
-				//List<HolidayItemDTO> items = ((HolidayItemsDTO)((Map<String, Object>)value.get("body")).get("items")).getItems();
 				
-				Map<String, Object> itemWrapper = (Map<String, Object>)((Map<String, Object>)value.get("response")).get("body");
-				
-				List<HolidayItemDTO> items = ((HolidayItemsDTO)itemWrapper.get("items")).getItems();
-				
+				List<HolidayItemDTO> items = response.getBody().getItems();
+								
 				for(HolidayItemDTO item : items) {
 					
 					System.out.println(item.toString());
