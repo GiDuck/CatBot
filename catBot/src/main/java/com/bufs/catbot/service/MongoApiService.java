@@ -45,16 +45,28 @@ public class MongoApiService {
 			
 			List<Map<String, String>> holidayInfos = new ArrayList<>();
 			Map<String, String> holiday = null;
+			boolean exsistDate = false;
+			String date;
 			
 			for(HolidayItemDTO item : items) {
 				
-				if(!item.getIsHoliday().equals("Y"))
+				date = item.getLocdate().substring(0, 4) + "-" + item.getLocdate().substring(4, 6) + "-" + item.getLocdate().substring(6, 8);
+				
+				exsistDate = mongoDAO.findHoliday(date);
+				boolean schooleExsistDate = mongoDAO.findUniversityHoliday(date);
+				
+				System.out.println("공휴일 테스트... " );
+				System.out.println("공휴일 존재? " + exsistDate);
+				System.out.println("학교 공휴일 존재 ? " + schooleExsistDate);
+				
+				
+				if(!item.getIsHoliday().equals("Y") || !exsistDate)
 					continue;
 				
-				System.out.println("date " + item.getLocdate());
+				
 				
 				holiday = new HashMap<>();
-				holiday.put("date", item.getLocdate().substring(0, 4) + "-" + item.getLocdate().substring(4, 6) + "-" + item.getLocdate().substring(6, 8));
+				holiday.put("date", date);
 				holiday.put("name", item.getDateName());
 				holiday.put("type", "공휴일");
 			
@@ -62,6 +74,8 @@ public class MongoApiService {
 				
 				
 			}
+			
+			System.out.println("들어가는 공휴일 개수 " + holidayInfos.size());
 			
 			mongoDAO.insertHolidayInfo(holidayInfos);
 
@@ -76,4 +90,6 @@ public class MongoApiService {
 		}
 	
 	}
+	
+	
 }

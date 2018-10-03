@@ -138,5 +138,32 @@ public class MongoDAO {
 	}
 	
 	
+	public boolean findHoliday(String date) {
+		
+		
+		Criteria criteria = new Criteria("date");
+		criteria.equals(date);
+		Query query = new Query(criteria);
+		boolean isExsist = mongoTemplate.exists(query, "catHoliday");
+		
+		return isExsist;
+		
+	}
+	
+	public boolean findUniversityHoliday(String date) {
+		
+		
+		Criteria criteria = new Criteria("date").is(date).orOperator(new Criteria("type").is("학교휴일"));
+		Query query = new Query(criteria);
+		boolean isExsist = mongoTemplate.exists(query, "catHoliday");
+		
+		return isExsist;
+		
+	}
+	
+	
+	
+	
+	
 	
 }
