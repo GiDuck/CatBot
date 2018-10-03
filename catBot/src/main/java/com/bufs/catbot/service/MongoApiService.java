@@ -1,9 +1,12 @@
 package com.bufs.catbot.service;
 
-import java.net.URLEncoder;
+import java.net.URI;
 
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.bufs.catbot.domain.HolidayItemDTO;
 import com.bufs.catbot.domain.HolidayItemsDTO;
@@ -13,8 +16,8 @@ public class MongoApiService {
 
 	private RestTemplate restTemplate = new RestTemplate();
 	private final String serviceKey = "LRfAv2S42k%2BQXh7V7nYx28VbrpCEbf6rCX4GU5OBi1k%2FHUGXcsXy80ONnVUi%2FfJ64Xd0IT2ouRvlCUwDj1xXlw%3D%3D";
-	private final String holidayURL = "http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getHoliDeInfo?ServiceKey=";
-	private String requestURL = null;
+	private final String holidayURL = "http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getHoliDeInfo";
+	private String requestURL;
 
 	public void requestHolidayInfo() {
 
@@ -23,11 +26,18 @@ public class MongoApiService {
 			String solMonth = i < 10 ? "0" + i : String.valueOf(i);
 			
 			try {
-				requestURL = URLEncoder.encode(holidayURL, "utf-8") + serviceKey + URLEncoder.encode("&solYear=2018&solMonth=" + solMonth, "utf-8");
 				
-				System.out.println("요청하는 URL은.. " + requestURL);
+				MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+				params.add("ServiceKey", serviceKey);
+				params.add("solYear", "2018");
+				params.add("solMonth", solMonth);
+				
+				URI requestURI = UriComponentsBuilder.fromHttpUrl(holidayURL)
+						.queryParams(params).encode().build().toUri();
+				
+				System.out.println("요청하는 URL은.. " + requestURI.toString());
 
-				HolidayItemsDTO items = restTemplate.getForObject(requestURL, HolidayItemsDTO.class);
+				HolidayItemsDTO items = restTemplate.getForObject(requestURI, HolidayItemsDTO.class);
 
 				for (HolidayItemDTO item : items.getHolidayItemDTOs()) {
 
