@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.yaml.snakeyaml.util.UriEncoder;
 
 @Service
 public class MongoApiService {
@@ -34,7 +35,7 @@ public class MongoApiService {
 				
 				System.out.println("요청하는 URL은.. " + requestURI);
 
-				String value = restTemplate.getForObject(requestURI, String.class);
+				String value = restTemplate.getForObject(UriEncoder.encode(requestURI), String.class);
 
 				System.out.println("지금 들고온 휴일 정보는...");
 				System.out.println(value);
