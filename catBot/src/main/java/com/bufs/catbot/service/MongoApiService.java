@@ -1,12 +1,16 @@
 package com.bufs.catbot.service;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+
+import com.bufs.catbot.domain.HolidayItemDTO;
+import com.bufs.catbot.domain.HolidayItemsDTO;
 
 @Service
 public class MongoApiService {
@@ -40,15 +44,16 @@ public class MongoApiService {
 				System.out.println("지금 들고온 휴일 정보는...");
 				//List<HolidayItemDTO> items = ((HolidayItemsDTO)((Map<String, Object>)value.get("body")).get("items")).getItems();
 				
-				Map<String, Object> items = (Map<String, Object>)((Map<String, Object>)value.get("response")).get("body");
+				Map<String, Object> itemWrapper = (Map<String, Object>)((Map<String, Object>)value.get("response")).get("body");
 				
-				/*for(HolidayItemDTO item : items) {
+				List<HolidayItemDTO> items = ((HolidayItemsDTO)itemWrapper.get("items")).getItems();
+				
+				for(HolidayItemDTO item : items) {
 					
 					System.out.println(item.toString());
 					
-				}*/
+				}
 				
-				System.out.println(items);
 				
 /*				for (HolidayItemDTO item : items.getHolidayItemDTOs()) {
 
