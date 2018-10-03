@@ -31,11 +31,11 @@ public class MongoApiService {
 						.queryParams(params).build().toString();*/
 										
 				
-				String requestURI = holidayURL + "?ServiceKey="+serviceKey + "&solYear=2018&" + "solMonth=" + solMonth;
+				String requestURI = holidayURL + "?ServiceKey="+ UriEncoder.decode(serviceKey) + "&solYear=2018&" + "solMonth=" + solMonth;
 				
 				System.out.println("요청하는 URL은.. " + requestURI);
 
-				String value = restTemplate.getForObject(UriEncoder.encode(requestURI), String.class);
+				String value = restTemplate.getForObject(requestURI, String.class);
 
 				System.out.println("지금 들고온 휴일 정보는...");
 				System.out.println(value);
