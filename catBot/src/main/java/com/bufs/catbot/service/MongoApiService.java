@@ -1,6 +1,6 @@
 package com.bufs.catbot.service;
 
-import java.net.URI;
+import java.net.URLEncoder;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -28,7 +28,7 @@ public class MongoApiService {
 				
 				System.out.println("요청하는 URL은.. " + requestURL);
 
-				HolidayItemsDTO items = restTemplate.getForObject(new URI(requestURL), HolidayItemsDTO.class);
+				HolidayItemsDTO items = restTemplate.getForObject(URLEncoder.encode(requestURL, "utf-8"), HolidayItemsDTO.class);
 
 				for (HolidayItemDTO item : items.getHolidayItemDTOs()) {
 
