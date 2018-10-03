@@ -99,6 +99,8 @@ public class MongoCrawlingService {
 		
 		List<MongoMealDTO> meals = mongoCrawlingDAO.getMealInfo(token, nowDateStr);
 		
+
+		
 		if(meals == null || meals.size()== 0)
 		{
 			result.put("text", "학식 정보가 없다냥");

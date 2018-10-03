@@ -52,7 +52,9 @@ public class MongoBusService{
 			
 		 if(type.contains("셔틀")) {
 		
+			 if(!isHoliday) {
 			 isHoliday = mongoDAO.findUniversityHoliday(nowT.toLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).toString());		
+			 }
 			 
 			 isShuttleBus = true;
 		 }
@@ -118,8 +120,9 @@ public class MongoBusService{
 		boolean isHoliday = mongoDAO.findHoliday(nowT.toLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).toString());
 		 if(type.contains("셔틀")) {
 			 isShuttleBus = true;	 
-			isHoliday = mongoDAO.findUniversityHoliday(nowT.toLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).toString());
-
+			 if(!isHoliday) {
+				 isHoliday = mongoDAO.findUniversityHoliday(nowT.toLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).toString());		
+				 }
 		 }
 		 
 		
@@ -168,7 +171,7 @@ public class MongoBusService{
 			 if(isShuttleBus) {
 			 message = GetShuttleBusMessage(pBusTable);
 			 }else {
-				 message = GetTownBusMessage(pBusTable, station, bound);
+				 message = GetTownBusMessage(pBusTable, station, bound, isWeekend);
 			 }
 
 		 
@@ -263,9 +266,10 @@ public class MongoBusService{
 	 
 	 
 	 
- public String GetTownBusMessage(List<MongoBusTimeFormat> busTable, String station, String bound) {
+ public String GetTownBusMessage(List<MongoBusTimeFormat> busTable, String station, String bound,  Boolean isWeekend) {
 		 
-		 String message = station+"-"+bound+" 마을버스 정보라냥. \n\n남산역에서 출발하는 버스는 시간이 정확하지 않다냥. 보통 외대에서 출발후에 6분에서 10분 정도 걸린다냥 \n마을버스 시간은 경우에 따라서 바뀔 수 있으니 유의하라냥 \n\n";
+	 	String weekend = isWeekend? "주말" : "평일";
+		 String message = station+"-"+bound+" " +weekend + " 마을버스 정보라냥. \n\n남산역에서 출발하는 버스는 시간이 정확하지 않다냥. 보통 외대에서 출발후에 6분에서 10분 정도 걸린다냥 \n마을버스 시간은 경우에 따라서 바뀔 수 있으니 유의하라냥 \n\n";
 		 
 		 
 		 for(MongoBusTimeFormat time : busTable) {
@@ -392,6 +396,7 @@ public class MongoBusService{
 	 }
 
 
+	 
 	 
 	 
 	 
