@@ -30,8 +30,6 @@ public class MongoApiService {
 				HolidayResponseVO response = restTemplate.getForObject(requestURI, HolidayResponseVO.class);		
 				
 				System.out.println("지금 들고온 휴일 정보는...");
-				System.out.println(response.getBody().toString());
-
 				
 				List<HolidayItemDTO> items = response.getBody();
 								
