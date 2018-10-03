@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import org.yaml.snakeyaml.util.UriEncoder;
 
 @Service
 public class MongoApiService {
@@ -31,7 +30,7 @@ public class MongoApiService {
 						.queryParams(params).build().toString();*/
 										
 				
-				String requestURI = holidayURL + "?ServiceKey="+ UriEncoder.decode(serviceKey) + "&solYear=2018&" + "solMonth=" + solMonth;
+				String requestURI = holidayURL + "?ServiceKey="+ serviceKey + "&solYear=2018&" + "solMonth=" + solMonth;
 				
 				System.out.println("요청하는 URL은.. " + requestURI);
 
