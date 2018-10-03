@@ -40,7 +40,7 @@ public class MongoApiService {
 				System.out.println("지금 들고온 휴일 정보는...");
 				//List<HolidayItemDTO> items = ((HolidayItemsDTO)((Map<String, Object>)value.get("body")).get("items")).getItems();
 				
-				Map<String, Object> items = (Map<String, Object>)value.get("body");
+				Map<String, Object> items = (Map<String, Object>)((Map<String, Object>)value.get("response")).get("body");
 				
 				/*for(HolidayItemDTO item : items) {
 					
