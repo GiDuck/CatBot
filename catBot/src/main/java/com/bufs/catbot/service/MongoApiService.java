@@ -17,7 +17,7 @@ public class MongoApiService {
 	private RestTemplate restTemplate = new RestTemplate();
 	private final String serviceKey = "LRfAv2S42k%2BQXh7V7nYx28VbrpCEbf6rCX4GU5OBi1k%2FHUGXcsXy80ONnVUi%2FfJ64Xd0IT2ouRvlCUwDj1xXlw%3D%3D";
 	private final String holidayURL = "http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getHoliDeInfo";
-	private String requestURL;
+	private String requestURL = null;
 
 	public void requestHolidayInfo() {
 
