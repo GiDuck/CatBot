@@ -2,6 +2,7 @@ package com.bufs.catbot.persistence;
 
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -123,6 +124,18 @@ public class MongoDAO {
 		
 	}
 	
+	
+	public void insertHolidayInfo(List<Map<String, String>> items) {
+		
+		
+		
+		for(Map<String, String> item : items) {
+			
+		mongoTemplate.insert(item, "catHoliday");
+		
+		}
+		
+	}
 	
 	
 	
