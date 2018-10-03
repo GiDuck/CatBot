@@ -20,7 +20,7 @@ public class MongoApiService {
 		for (int i = 1; i < 13; ++i) {
 
 			try {
-				requestURL = holidayURL + "&solYear=2018&solMonth=" + (i < 10 ? i : "0" + i);
+				requestURL = holidayURL + "&solYear=2018&solMonth=" + (i < 10 ? "0" + i : i);
 				
 				System.out.println("요청하는 URL은.. " + requestURL);
 
