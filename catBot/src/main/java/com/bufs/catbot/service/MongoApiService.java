@@ -33,7 +33,7 @@ public class MongoApiService {
 				params.add("solMonth", solMonth);
 				
 				URI requestURI = UriComponentsBuilder.fromHttpUrl(holidayURL)
-						.queryParams(params).encode().build().toUri();
+						.queryParams(params).build().toUri();
 				
 				System.out.println("요청하는 URL은.. " + requestURI.toString());
 
