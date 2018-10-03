@@ -1,6 +1,5 @@
 package com.bufs.catbot.service;
 
-import java.net.URI;
 import java.net.URLEncoder;
 
 import org.springframework.stereotype.Service;
@@ -14,9 +13,8 @@ public class MongoApiService {
 
 	private RestTemplate restTemplate = new RestTemplate();
 	private final String serviceKey = "LRfAv2S42k%2BQXh7V7nYx28VbrpCEbf6rCX4GU5OBi1k%2FHUGXcsXy80ONnVUi%2FfJ64Xd0IT2ouRvlCUwDj1xXlw%3D%3D";
-	private final String holidayURL = "http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getHoliDeInfo?ServiceKey="
-			+ serviceKey;
-	private String requestURL;
+	private final String holidayURL = "http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getHoliDeInfo?ServiceKey=";
+	private String requestURL = null;
 
 	public void requestHolidayInfo() {
 
@@ -25,11 +23,11 @@ public class MongoApiService {
 			String solMonth = i < 10 ? "0" + i : String.valueOf(i);
 			
 			try {
-				requestURL = holidayURL + "&solYear=2018&solMonth=" + solMonth;
+				requestURL = URLEncoder.encode(holidayURL, "utf-8") + serviceKey + URLEncoder.encode("&solYear=2018&solMonth=" + solMonth, "utf-8");
 				
 				System.out.println("요청하는 URL은.. " + requestURL);
 
-				HolidayItemsDTO items = restTemplate.getForObject(new URI(URLEncoder.encode(requestURL, "UTF-8")), HolidayItemsDTO.class);
+				HolidayItemsDTO items = restTemplate.getForObject(requestURL, HolidayItemsDTO.class);
 
 				for (HolidayItemDTO item : items.getHolidayItemDTOs()) {
 
