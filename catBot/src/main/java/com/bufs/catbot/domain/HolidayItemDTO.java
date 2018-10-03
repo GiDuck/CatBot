@@ -1,23 +1,11 @@
 package com.bufs.catbot.domain;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-
-@XmlRootElement(name="item")
-@XmlAccessorType(XmlAccessType.FIELD)
 public class HolidayItemDTO {
-		
-		@XmlElement
+	
 		private String locdate;
-		@XmlElement
 		private String dateKind;
-		@XmlElement
 		private String isHoliday;
-		@XmlElement
 		private String dateName;
-		@XmlElement
 		private int seq;
 		
 		
@@ -57,10 +45,6 @@ public class HolidayItemDTO {
 			return "HolidayItemDTO [locdate=" + locdate + ", dateKind=" + dateKind + ", isHoliday=" + isHoliday
 					+ ", dateName=" + dateName + ", seq=" + seq + "]";
 		}
-		
-		
-		
-		
-
 	
+
 }
