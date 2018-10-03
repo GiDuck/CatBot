@@ -54,18 +54,11 @@ public class MongoApiService {
 				
 				exsistDate = false;
 				exsistDate = mongoDAO.findHoliday(date);
-				boolean schooleExsistDate = mongoDAO.findUniversityHoliday(date);
-				
-				System.out.println("공휴일 테스트... " );
-				System.out.println("공휴일 존재? " + exsistDate);
-				System.out.println("학교 공휴일 존재 ? " + schooleExsistDate);
 				
 				
 				if(!item.getIsHoliday().equals("Y") || exsistDate)
 					continue;
-				
-				
-				
+								
 				holiday = new HashMap<>();
 				holiday.put("date", date);
 				holiday.put("name", item.getDateName());

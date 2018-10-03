@@ -5,6 +5,7 @@ import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -16,12 +17,17 @@ import org.springframework.stereotype.Service;
 
 import com.bufs.catbot.domain.MongoBusTimeFormat;
 import com.bufs.catbot.persistence.MongoBusDAO;
+import com.bufs.catbot.persistence.MongoDAO;
 
 @Service
 public class MongoBusService{
 
 	@Autowired
 	private MongoBusDAO busDAO;
+	
+	@Autowired
+	private MongoDAO mongoDAO;
+	
 	private SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 	
 	public static final int BUFS_SHUTTLE_TERM_DOMI = 2;
@@ -38,13 +44,20 @@ public class MongoBusService{
 		
 		 Boolean isShuttleBus = false;
 		 Boolean isWeekend = false;
+
+		 
+		 LocalDateTime nowT = LocalDateTime.now();
+		 
+		 boolean isHoliday = mongoDAO.findHoliday(nowT.toLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).toString());
+			
 		 if(type.contains("셔틀")) {
+		
+			 isHoliday = mongoDAO.findUniversityHoliday(nowT.toLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).toString());		
+			 
 			 isShuttleBus = true;
 		 }
 		 
-		 LocalDateTime nowT = LocalDateTime.now();
-			
-			if(nowT.getDayOfWeek() == DayOfWeek.SATURDAY || nowT.getDayOfWeek() == DayOfWeek.SUNDAY) {
+			if(nowT.getDayOfWeek() == DayOfWeek.SATURDAY || nowT.getDayOfWeek() == DayOfWeek.SUNDAY || isHoliday) {
 				
 				isWeekend = true;
 		 }
@@ -99,13 +112,18 @@ public class MongoBusService{
 		 Map<String, Object> result = new HashMap<String, Object>();
 		 
 		 
-		 if(type.contains("셔틀")) {
-			 isShuttleBus = true;	 
-		 }
-		 
+
 		LocalDateTime nowT = LocalDateTime.now();
 		
-		if(nowT.getDayOfWeek() == DayOfWeek.SATURDAY || nowT.getDayOfWeek() == DayOfWeek.SUNDAY) {
+		boolean isHoliday = mongoDAO.findHoliday(nowT.toLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).toString());
+		 if(type.contains("셔틀")) {
+			 isShuttleBus = true;	 
+			isHoliday = mongoDAO.findUniversityHoliday(nowT.toLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).toString());
+
+		 }
+		 
+		
+		if(nowT.getDayOfWeek() == DayOfWeek.SATURDAY || nowT.getDayOfWeek() == DayOfWeek.SUNDAY || isHoliday) {
 			
 			isWeekend = true;
 		}
