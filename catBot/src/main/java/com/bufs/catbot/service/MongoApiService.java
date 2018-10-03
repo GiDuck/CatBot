@@ -21,6 +21,8 @@ public class MongoApiService {
 
 			try {
 				requestURL = holidayURL + "&solYear=2018&solMonth=" + (i < 10 ? i : "0" + i);
+				
+				System.out.println("요청하는 URL은.. " + requestURL);
 
 				HolidayItemsDTO items = restTemplate.getForObject(requestURL, HolidayItemsDTO.class);
 
