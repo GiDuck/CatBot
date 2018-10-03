@@ -27,11 +27,11 @@ public class HolidayResponseVO {
 	}
 	
 	
-	@XmlElementWrapper(name="response")
 	@XmlElement
 	public HolidayItemsDTO getBody() {
 		return body;
 	}
+	
 	public void setBody(HolidayItemsDTO body) {
 		this.body = body;
 	}
