@@ -83,15 +83,23 @@ public class SwitchController {
 		
 		Map<String, Map<String, Object>> message = new HashMap<String, Map<String, Object>>();
 		Map<String, Map<String, Object>> result = new HashMap<String, Map<String,Object>>();
-
+		Map<String, Object> tempMap = null;
 
 		try {
 		
 		String keyParam = (String)(reqParam.get("content"));
 		String user_key = (String)(reqParam.get("user_key"));
 				
-		
-		if(keyParam.contains("전화번호검색")) {
+		if(keyParam.contains("dn-m.talk.kakao.com")) {
+			
+			message = mongoService.getCatAnswer("냥냥봇", user_key);
+			tempMap = message.get("message");
+			tempMap.put("text", "사진과 동영상 같은 건 이해할 수 없다냥 닝겐.");
+			message.put("message", tempMap);
+
+			
+		}
+		else if(keyParam.contains("전화번호검색")) {
 			
 			message = mongoFindService.findGuide();
 		}
@@ -99,7 +107,7 @@ public class SwitchController {
 			
 			message = mongoService.getCatAnswer("냥냥봇", user_key);
 			
-			Map<String, Object> tempMap = mongoFindService.findPerson(keyParam).get("message");
+			tempMap = mongoFindService.findPerson(keyParam).get("message");
 			message.put("message", tempMap);
 			
 		}else if(keyParam.contains("도서검색")) {
@@ -112,7 +120,7 @@ public class SwitchController {
 			
 			message = mongoService.getCatAnswer("냥냥봇", user_key);
 			
-			Map<String, Object> tempMap = mongoFindService.findBook(keyParam).get("message");
+			tempMap = mongoFindService.findBook(keyParam).get("message");
 			message.put("message", tempMap);
 			
 		}
@@ -123,7 +131,7 @@ public class SwitchController {
 		}else if(keyParam.contains("#냥냥#")) {
 			
 			message = mongoService.getCatAnswer("냥냥봇", user_key);
-			Map<String, Object> tempMap = mongoService.catRequestSomething(keyParam, user_key).get("message");
+			tempMap = mongoService.catRequestSomething(keyParam, user_key).get("message");
 			message.put("message", tempMap);
 		}		
 		else if(keyParam.contains("현재버스(셔틀)")) {
