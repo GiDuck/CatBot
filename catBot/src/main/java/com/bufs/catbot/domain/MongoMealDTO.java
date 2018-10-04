@@ -2,6 +2,12 @@ package com.bufs.catbot.domain;
 
 import org.springframework.data.annotation.Id;
 
+/*
+ * 
+ * 학식 정보를 가져오는 도메인 클래스
+ * 
+ * */
+
 public class MongoMealDTO {
 
 	

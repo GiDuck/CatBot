@@ -4,8 +4,15 @@ import java.util.Date;
 
 import org.springframework.data.annotation.Id;
 
+
+/*
+ * 뒤로가기 작업할 때 사용하는 도메인 클래스
+ * 
+ * */
+
+
 public class HistorySession {
-	
+
 	
 	@Id
 	private String id;

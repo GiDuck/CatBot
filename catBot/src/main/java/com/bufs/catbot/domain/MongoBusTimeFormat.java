@@ -1,5 +1,11 @@
 package com.bufs.catbot.domain;
 
+/*
+ * 
+ * 버스 시간을 간략하게 가져오는 도메인 클래스
+ * 
+ * */
+
 public class MongoBusTimeFormat {
 
 	private String time;

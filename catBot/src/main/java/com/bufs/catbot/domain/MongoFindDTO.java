@@ -2,6 +2,13 @@ package com.bufs.catbot.domain;
 
 import org.springframework.data.annotation.Id;
 
+/*
+ * 
+ * 전화번호 검색 시 사용하는 도메인 클래스
+ * 
+ * */
+
+
 public class MongoFindDTO {
 	
 	@Id

@@ -2,6 +2,11 @@ package com.bufs.catbot.domain;
 
 import org.springframework.data.annotation.Id;
 
+/*
+ * 냥냥봇으로 사용자가 요청사항을 보낼때 사용하는 도메인 
+ * 
+ * */
+
 public class CatRequestForm {
 	
 	@Id

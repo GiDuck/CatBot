@@ -2,6 +2,13 @@ package com.bufs.catbot.domain;
 
 import org.springframework.data.annotation.Id;
 
+
+/*
+ * 
+ * DB에서 버스 정보를 가져올 때 사용하는 도메인 클래스
+ * 
+ * */
+
 public class MongoBusDTO {
 
 

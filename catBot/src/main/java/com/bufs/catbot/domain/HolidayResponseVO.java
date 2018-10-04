@@ -3,7 +3,12 @@ package com.bufs.catbot.domain;
 import java.util.Map;
 
 import javax.xml.bind.annotation.XmlRootElement;
-
+/*
+ * 
+ * 
+ * JAXB를 사용하여 XML 매핑할 때 사용하는 도메인 클래스
+ * 
+ * */
 @XmlRootElement(name="response")
 public class HolidayResponseVO {
 

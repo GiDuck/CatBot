@@ -54,6 +54,7 @@ public class SwitchController {
 	
 
 	
+	//DB커넥션을 테스트 하기 위한 페이지
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home() {
 		logger.info("Front Contoller 진입, MongoDB connection test...");
@@ -63,7 +64,7 @@ public class SwitchController {
 	
 	
 
-	//맨 처음에 키보드가 init 되는 요청
+	//처음 클라이언트의 냥냥봇 카톡창에 키보드가 초기화 되는 요청
 	@ResponseBody
 	@RequestMapping(value="/keyboard", method=RequestMethod.GET)
 	public Map<String, Object> keyboard() {
@@ -75,16 +76,20 @@ public class SwitchController {
 	}
 	
 	
+	//사용자가 선택한 버튼에 따라 요청을 분기하는 메소드
 	@ResponseBody
 	@RequestMapping(value="/message", method= {RequestMethod.GET, RequestMethod.POST}, headers="Accept=application/json")
 	public Map<String, Map<String, Object>> message(@RequestBody Map<String, Object> reqParam) throws Exception {
 		
-		
 		Map<String, Map<String, Object>> message = new HashMap<String, Map<String, Object>>();
+		Map<String, Map<String, Object>> result = new HashMap<String, Map<String,Object>>();
+
+
+		try {
+		
 		String keyParam = (String)(reqParam.get("content"));
 		String user_key = (String)(reqParam.get("user_key"));
 				
-		
 		
 		if(keyParam.contains("전화번호검색")) {
 			
@@ -185,25 +190,33 @@ public class SwitchController {
 		}
 
 		
-		
+		}catch(Exception e) {
+			
+			
+			e.printStackTrace();
+			
+			Map<String, Object> errorMegBox = new HashMap<String, Object>();
+			
+			String errorStr = "오류가 발생하였다냥. 잠시 후에 다시 시도해 달라냥. \n조금 있다가  냥냥봇  이라고 검색해 달라냥.";
+			errorMegBox.put("text", errorStr);
+			result.put("message", errorMegBox);	
+			
+		}
 		return message;
 	}
 	
 	
+	
+	//매 월 1일 오전 12시에 휴일 정보를 가져와서 DB에 넣음
+	@Scheduled(cron = "0 0 12 1 * *")
 	@RequestMapping("/setHolidayInfo")
 	public void setHolidayInfo () {
 		
-		
-		mongoApiService.requestHolidayInfo();
-		
-		
+		mongoApiService.requestHolidayInfo();	
 		
 	}
 	
-	
-	
-	
-	
+
 	//매일 오후 12시에 학식 페이지에서 메뉴를 들고와 DB에 넣어주는 스케쥴러
 	@Scheduled(cron = "0 0 12 * * MON-FRI")
 	public void CrawlMealInfo() {

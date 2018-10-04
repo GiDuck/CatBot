@@ -2,6 +2,12 @@ package com.bufs.catbot.domain;
 
 import org.springframework.data.annotation.Id;
 
+/*
+ * 
+ * 요청-응답 트리의 데이터를 가져오는 클래스
+ * 
+ * */
+
 public class MongoDTO {
 
 	@Id

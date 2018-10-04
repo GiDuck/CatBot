@@ -15,6 +15,13 @@ import com.bufs.catbot.domain.HistorySession;
 import com.bufs.catbot.domain.MongoDTO;
 import com.bufs.catbot.persistence.MongoDAO;
 
+/*
+ * 
+ * 사용자가 선택한 버튼의 정보를 요청 - 응답 트리에서 가져오는 서비스
+ * 
+ * */
+
+
 @Service
 public class MongoService {
 
@@ -27,6 +34,7 @@ public class MongoService {
 	//Catbot 기본 대답
 	public Map<String, Map<String, Object>> getCatAnswer(String key, String user_key) {
 		
+		//사용자가 클릭한 버튼이 뒤로가기 버튼인지 판단한 것을 저장하는 변수
 		boolean isBackTacking = false;
 		
 		Map<String, Map<String, Object>> result = new HashMap<String, Map<String,Object>>();
@@ -34,6 +42,7 @@ public class MongoService {
 		Map<String, Object> message = new HashMap<String, Object>();
 
 	
+		//만약 뒤로가기 버튼이면 사용자의 바로 이전에 선택했던 버튼을 pop 시킨다.
 		if(key.equals("뒤로가기")) {
 			key = popHistory(user_key);
 			isBackTacking = true;	
@@ -41,8 +50,10 @@ public class MongoService {
 		
 		
 
+		//키에 해당하는 value값 가져오기
 		MongoDTO catAnswer = mongoDAO.getCatAnswer(key);
-			
+		
+		//만약 가져온 데이터가 없으면 초기 키보드 value를 전달한다.
 		if(catAnswer == null) {
 			
 			catAnswer = mongoDAO.getCatAnswer("냥냥봇");
@@ -50,6 +61,7 @@ public class MongoService {
 		}
 
 		//만약 단말노드이면 message만 출력
+		//단말 노드이면 value가 Object로 구성이 되어있다.
 		if(catAnswer.getIsTerminal()) {
 			
 			param.put("type", "buttons");
@@ -58,6 +70,8 @@ public class MongoService {
 			StringBuffer script = new StringBuffer();
 			Map<String, String> terminalMap = (Map<String, String>)catAnswer.getValue();
 			
+			
+			//Object를 Map 형식으로 변환하여 iterator로 출력
 			Iterator<String> itr = terminalMap.keySet().iterator();
 			
 			while(itr.hasNext()) {
@@ -67,24 +81,26 @@ public class MongoService {
 				
 			}
 			
+			//null이라고 출력된 데이터는 공백으로 처리한다.
 			message.put("text", script.toString().replace("null", ""));
 			result.put("message", message);
 			result.put("keyboard", param);
 			
 			
+			//단말 노드이후에는 다시 기본 키보드값으로 초기화 되어야 하므로 뒤로가기 목록 삭제
 			mongoDAO.removeAllHistory(user_key);
 			
 			return result;
 
 
-			
+		//단말 노드가 아니라면	
 		}else {
 			
 			List<String> buttons = (List<String>)catAnswer.getValue();
 			
+			//만약 제일 상위 노드가 아니라면 뒤로가기 버튼을 클릭한다. (제일 상위노드는 뒤로가기가 없다)
 			if(catAnswer.getLevel() > 1)
 			buttons.add("뒤로가기");
-			
 			
 			try {
 				
@@ -94,6 +110,7 @@ public class MongoService {
 
 
 				
+			//예외 발생 시 기본 키보드 값으로 전달
 			}catch (Exception e) {
 					
 					e.printStackTrace();
@@ -103,14 +120,13 @@ public class MongoService {
 
 
 			}
-				
 
 			result.put("message", message);
 			result.put("keyboard", param);
 			
-			
 		}
-						
+
+		//만약 현재 가져온 노드의 레벨이 제일 상위 노드이면, 뒤로가기 목록을 삭제한다.
 		if(catAnswer.getLevel() < 2) {
 			
 			mongoDAO.removeAllHistory(user_key);
@@ -118,7 +134,8 @@ public class MongoService {
 		}
 		
 		
-			
+		
+		//만약에 지금 들어온 키값이 뒤로가기 버튼이 아니라면 현재 버튼을 뒤로가기 목록에 추가
 			if(!isBackTacking) {
 				
 			HistorySession history = new HistorySession();
@@ -129,16 +146,13 @@ public class MongoService {
 			putHistory(history);
 			
 			}
-		
-		
-		System.out.println("나가는 결과,,,");
-		System.out.println(result);
-	
+
 		return result;
 	
 	}
 	
 	
+	//제일 처음에 클라이언트의 채팅방에 나오는 키보드 목록
 	public List<String> getDefaultList() {
 		
 		List<String> message = new ArrayList<String>();
@@ -149,16 +163,14 @@ public class MongoService {
 		
 	}
 	
+	//뒤로가기 목록 삽입
 	public void putHistory(HistorySession history) {
 		
-		
 		mongoDAO.putHistory(history);
-	
-		
 		
 	}
 	
-	
+	//뒤로 가기 목록에서 제일 최근에 실행한 요소 꺼내기
 	public String popHistory(String user_key){
 		
 		String result = null;
@@ -177,6 +189,7 @@ public class MongoService {
 		}		
 		
 		
+		//만약 최근에 실행한 노드의 레벨이 2 이하이면, 키보드를 초기화 시키고 모든 뒤로가기 목록 삭제.
 		if(peekHistory.getLevel() < 3) {
 
 			result="냥냥봇";
@@ -189,7 +202,7 @@ public class MongoService {
 		
 		}
 		
-		
+		//top에 있는 히스토리 목록을 삭제
 		mongoDAO.removeOneHistory(peekHistory);
 		history.remove(history.size()-1);	
 		
@@ -206,6 +219,7 @@ public class MongoService {
 	}
 	
 	
+	//모든 히스토리 목록 삭제
 	public void removeAllHistory(String user_key) {
 		
 	
@@ -213,6 +227,7 @@ public class MongoService {
 		
 	}
 	
+	//히스토리 pop
 	public void removePopHistory(HistorySession history) {
 		
 		
@@ -222,14 +237,15 @@ public class MongoService {
 	
 	
 	
+	//사용자 건의사항 form을 만들어 주는 메소드
 	public Map<String, Map<String, Object>> catRequestForm(){
 		
 		Map<String, Map<String, Object>> result = new HashMap<String, Map<String,Object>>();
 		Map<String, Object> message = new HashMap<String, Object>();
 		
-		message.put("text", "반갑다냥. 내가 그동안 많이 알려줬겠지만 부족한 것이 있을꺼라고 생각한다냥.\n 혹시 나에게 말하고 싶거나 건의하고 싶은게 있으면 얼마든지 말하라냥\n 개인 정보는 저장되지 않으니 안심하라냥.\n"
+		message.put("text", "반갑다냥. 내가 그동안 많이 알려줬겠지만 부족한 것이 있을꺼라고 생각한다냥.\n혹시 나에게 말하고 싶거나 건의하고 싶은게 있으면 얼마든지 말하라냥\n개인 정보는 저장되지 않으니 안심하라냥.\n\n"
 				+ "규칙을 알려주겠다냥. #냥냥# 이라고 앞에 붙이고 할 말을 쓰라냥. \n"
-				+ "예를 들면 #냥냥#안녕 냥냥봇, #냥냥#냥냥펀치 이런 식으로 쓰라냥. \n 많은 의견을 기대하겠다냥. 고맙다냥. ");
+				+ "예를 들면 #냥냥#안녕 냥냥봇, #냥냥#냥냥펀치 이런 식으로 쓰라냥. \n많은 의견을 기대하겠다냥. 고맙다냥. ");
 		
 		result.put("message", message);
 		
@@ -243,8 +259,6 @@ public class MongoService {
 	public  Map<String, Map<String, Object>> catRequestSomething(String key, String user_key){
 		
 		key = key.replace("#냥냥#", "");
-
-		
 		Map<String, Map<String, Object>> result = new HashMap<String, Map<String,Object>>();
 		Map<String, Object> message = new HashMap<String, Object>();
 		String resultStr = "";
@@ -263,7 +277,7 @@ public class MongoService {
 			resultStr ="냥냥!";
 		}
 		
-		
+
 		message.put("text", resultStr);
 		result.put("message", message);	
 	
