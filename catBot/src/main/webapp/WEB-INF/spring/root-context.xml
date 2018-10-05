@@ -13,7 +13,10 @@
 	
 
 
-<mongo:mongo-client id="mongo" host="127.0.0.1" port="27777" credentials="gdtbgl93:kim1234@admin">
+
+
+
+<mongo:mongo-client id="mongo" host="127.0.0.1" port="${mongo.port}" credentials="${mongo.id}:${mongo.pwd}@admin">
 
 
 
