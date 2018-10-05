@@ -11,6 +11,16 @@
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	
+	
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	
+	<property name="locations">
+	<value>file:/var/user-properties/conf.properties</value>
+	</property>
+	<property name="ignoreUnresolvablePlaceholders" value="true"/>
+	
+
+	</bean>
 
 
 

@@ -42,15 +42,7 @@
 	<context:component-scan
 		base-package="com.bufs.catbot" />
 
-	<beans:bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 	
-	<beans:property name="locations">
-	<beans:value>file:/var/user-properties/conf.properties</beans:value>
-	</beans:property>
-	<beans:property name="ignoreUnresolvablePlaceholders" value="true"/>
-	
-
-	</beans:bean>
 	
 
 
