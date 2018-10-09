@@ -12,21 +12,15 @@
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	
 	
+	<!-- 외부 설정  파일 사용을 위한 PropertyPlaceholderConfigure -->
 	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-	
 	<property name="locations">
 	<value>file:/var/user-properties/conf.properties</value>
 	</property>
 	<property name="ignoreUnresolvablePlaceholders" value="true"/>
-	
-
 	</bean>
 
-
-
-
-
-<mongo:mongo-client id="mongo" host="127.0.0.1" port="${mongo.port}" credentials="${mongo.id}:${mongo.pwd}@admin">
+	<mongo:mongo-client id="mongo" host="127.0.0.1" port="${mongo.port}" credentials="${mongo.id}:${mongo.pwd}@admin">
 
 
 

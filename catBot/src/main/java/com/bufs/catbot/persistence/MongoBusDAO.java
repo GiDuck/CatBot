@@ -53,6 +53,7 @@ public class MongoBusDAO {
 			 criteria = new Criteria("타입").is("마을").andOperator(
 					 Criteria.where("시간").regex(pattern),
 					 Criteria.where("station").is(station),
+					 Criteria.where("bound").is(bound),
 					 Criteria.where("isWeekend").is(String.valueOf(isWeekend).toUpperCase()));
 			 query = new Query(criteria);
 			 query.fields().include("시간");
