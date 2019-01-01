@@ -1,7 +1,9 @@
 package com.bufs.catbot.service;
 
 import java.net.URI;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +31,7 @@ public class MongoApiService {
 	public void requestHolidayInfo() {
 		
 		List<HolidayItemDTO> items = null;
+		String requestYear = new SimpleDateFormat("yyyy").format(new Date());
 
 		for (int i = 1; i < 13; ++i) {
 
@@ -36,7 +39,7 @@ public class MongoApiService {
 			
 			try {
 				
-				requestURI = new URI(holidayURL + "?ServiceKey="+ serviceKey + "&solYear=2018&" + "solMonth=" + solMonth);
+				requestURI = new URI(holidayURL + "?ServiceKey="+ serviceKey + "&solYear=" + requestYear + "&" + "solMonth=" + solMonth);
 				
 				HolidayResponseVO response = restTemplate.getForObject(requestURI, HolidayResponseVO.class);		
 				

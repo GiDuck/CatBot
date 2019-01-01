@@ -216,7 +216,7 @@ public class SwitchController {
 	
 	
 	//매 월 1일 오전 12시에 휴일 정보를 가져와서 DB에 넣음
-	@Scheduled(cron = "0 0 12 1 * *")
+	@Scheduled(cron = "0 0 3 2 * *")
 	@RequestMapping("/setHolidayInfo")
 	public void setHolidayInfo () {
 		
