@@ -91,7 +91,7 @@ public class MongoBusDAO {
 		if(isShuttleBus) {
 
 			 criteria = new Criteria("타입").is("셔틀").andOperator(
-					 Criteria.where("isWeekend").is(isSeasonalSem));
+					 Criteria.where("isWeekend").is(String.valueOf(isSeasonalSem)));
 			 query = new Query(criteria);
 			 query.fields().include("시간");
 			 query.fields().exclude("_id");
@@ -102,7 +102,7 @@ public class MongoBusDAO {
 				 criteria = new Criteria("타입").is("마을").andOperator(
 						 Criteria.where("station").is(station),
 						 Criteria.where("bound").is(bound),
-						 Criteria.where("isWeekend").is(String.valueOf(isWeekend).toUpperCase()));
+						 Criteria.where("isWeekend").is(String.valueOf(String.valueOf(isSeasonalSem)).toUpperCase()));
 				 query = new Query(criteria);
 				 query.fields().include("시간");
 				 query.fields().exclude("_id");

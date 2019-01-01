@@ -347,10 +347,6 @@ public class MongoBusService{
 
 		 }
 		 
-		 if(busTable == null || busTable.size() == 0) {
-			 System.out.println("들어온 버스 시간 테이블 값이 없습니다.");
-			 return null;
-		 }
 		 
 		 compH = busTable.get(0).getHour();
 		 
