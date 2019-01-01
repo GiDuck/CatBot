@@ -135,7 +135,7 @@ public class SwitchController {
 			message.put("message", tempMap);
 		}else if("냥냥".equals(keyParam)) {
 			
-			
+			message = mongoService.catSay();
 			
 			
 		}else if(keyParam.contains("현재버스(셔틀)")) {
