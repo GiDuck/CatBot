@@ -303,7 +303,7 @@ public class MongoBusService{
  public String GetTownBusMessage(List<MongoBusTimeFormat> busTable, String station, String bound,  Boolean isWeekend) {
 		 
 	 	String weekend = isWeekend? "주말" : "평일";
-		 String message = station+"-"+bound+" " +weekend + " 마을버스 정보라냥. \n\n남산역에서 출발하는 버스는 시간이 정확하지 않다냥. 보통 외대에서 출발후에 6분에서 10분 정도 걸린다냥 \n마을버스 시간은 경우에 따라서 바뀔 수 있으니 유의하라냥 \n\n";
+		String message = station+"-"+bound+" " +weekend + " 마을버스 정보라냥. \n\n남산역에서 출발하는 버스는 시간이 정확하지 않다냥. 보통 외대에서 출발후에 6분에서 10분 정도 걸린다냥 \n마을버스 시간은 경우에 따라서 바뀔 수 있으니 유의하라냥 \n\n";
 		 
 		 
 		 for(MongoBusTimeFormat time : busTable) {

@@ -85,7 +85,7 @@ public class SwitchController {
 		Map<String, Map<String, Object>> result = new HashMap<String, Map<String,Object>>();
 		Map<String, Object> tempMap = null;
 
-		try {
+		/*try {
 		
 		String keyParam = (String)(reqParam.get("content"));
 		String user_key = (String)(reqParam.get("user_key"));
@@ -134,8 +134,9 @@ public class SwitchController {
 			tempMap = mongoService.catRequestSomething(keyParam, user_key).get("message");
 			message.put("message", tempMap);
 		}else if("냥냥".equals(keyParam)) {
+			message = mongoService.getCatAnswer("냥냥봇", user_key);
+			message.put("message", mongoService.catSay());
 			
-			message = mongoService.catSay();
 			
 			
 		}else if(keyParam.contains("현재버스(셔틀)")) {
@@ -213,7 +214,11 @@ public class SwitchController {
 			errorMegBox.put("text", errorStr);
 			result.put("message", errorMegBox);	
 			
-		}
+		}*/
+		Map<String, Object> innerMsg = new HashMap<String, Object>();
+		innerMsg.put("text", "현재 냥냥봇 수리중이라냥.. 곧 다시 찾아오겠다냥!");
+		message.put("message", innerMsg);
+		
 		return message;
 	}
 	

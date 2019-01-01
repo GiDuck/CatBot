@@ -65,7 +65,7 @@ public class MongoDAO {
 	
 	public String catSay() {
 		
-		String result = "냥냥!";
+		String result = "할 말을 까먹었다옹..";
 		try {
 		
 		MongoCollection<Document> collection = mongoTemplate.getCollection("catBrain");
@@ -74,7 +74,6 @@ public class MongoDAO {
 		
 		
 		for(Document docObj : resultSet) {
-			System.out.println(docObj);		
 			result = docObj.getString("text");
 			
 		}
