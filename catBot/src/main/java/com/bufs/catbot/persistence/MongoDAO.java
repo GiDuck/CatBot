@@ -73,12 +73,15 @@ public class MongoDAO {
 				new Document("$project", new Document("_Id", 0).append("text", "$views.text"))));
 		
 		
-		String result = null;
+		String result = "냥냥!";
 		for(Document docObj : resultSet) {
+			System.out.println(docObj);
 		
 			result = docObj.getString("text");
 			
 		}
+		
+		
 		
 		return result;
 		
