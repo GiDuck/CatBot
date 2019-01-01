@@ -1,10 +1,12 @@
 package com.bufs.catbot.persistence;
 
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -15,6 +17,8 @@ import org.springframework.stereotype.Repository;
 import com.bufs.catbot.domain.CatRequestForm;
 import com.bufs.catbot.domain.HistorySession;
 import com.bufs.catbot.domain.MongoDTO;
+import com.mongodb.client.AggregateIterable;
+import com.mongodb.client.MongoCollection;
 
 @Repository
 public class MongoDAO {
@@ -53,6 +57,32 @@ public class MongoDAO {
 		}
 		return result;
 	
+	}
+	
+	
+	
+
+	
+	public String catSay() {
+		
+		
+		MongoCollection<Document> collection = mongoTemplate.getCollection("catBrain");
+
+		AggregateIterable<Document> resultSet = collection.aggregate(Arrays.asList(
+				new Document("$sample", 1), 
+				new Document("$project", new Document("_Id", 0).append("text", "$views.text"))));
+		
+		
+		String result = null;
+		for(Document docObj : resultSet) {
+		
+			result = docObj.getString("text");
+			
+		}
+		
+		return result;
+		
+		
 	}
 	
 	
@@ -163,6 +193,7 @@ public class MongoDAO {
 		return isExsist;
 		
 	}
+	
 	
 	public Map<String, String> findDayInfo(String arg){
 		

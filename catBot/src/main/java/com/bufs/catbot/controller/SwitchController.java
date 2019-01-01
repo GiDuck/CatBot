@@ -133,8 +133,12 @@ public class SwitchController {
 			message = mongoService.getCatAnswer("냥냥봇", user_key);
 			tempMap = mongoService.catRequestSomething(keyParam, user_key).get("message");
 			message.put("message", tempMap);
-		}		
-		else if(keyParam.contains("현재버스(셔틀)")) {
+		}else if("냥냥".equals(keyParam)) {
+			
+			
+			
+			
+		}else if(keyParam.contains("현재버스(셔틀)")) {
 			
 			message = mongoService.getCatAnswer("냥냥봇", user_key);
 			message.put("message", mongoBusService.getBusInfo("셔틀", null, null));

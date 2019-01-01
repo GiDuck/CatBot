@@ -290,5 +290,24 @@ public class MongoService {
 	
 	
 	
+	public Map<String, Map<String, Object>> catSay(){
+		
+		Map<String, Map<String, Object>> result = new HashMap<String, Map<String,Object>>();
+		Map<String, Object> message = new HashMap<String, Object>();
+
+		String resultStr = mongoDAO.catSay();
+		message.put("text", resultStr);
+		result.put("message", message);	
+	
+	
+		return result;
+	
+	
+	
+	}
+	
+	
+	
+	
 	
 }

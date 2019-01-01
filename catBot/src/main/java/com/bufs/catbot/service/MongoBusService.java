@@ -184,8 +184,6 @@ public class MongoBusService{
 		 List<MongoBusTimeFormat> pBusTable = null;
 		 List<String> timeTable = null;
 
-		 System.out.println("isShuttleBus : " + isShuttleBus);
-		 
 		 
 		 if(isShuttleBus) {
 		 
