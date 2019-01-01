@@ -19,6 +19,7 @@ import com.bufs.catbot.domain.HistorySession;
 import com.bufs.catbot.domain.MongoDTO;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Aggregates;
 
 @Repository
 public class MongoDAO {
@@ -35,7 +36,6 @@ public class MongoDAO {
 		
 		Query query = new Query(criteria);
 		MongoDTO result = mongoTemplate.findOne(query, MongoDTO.class, "catDb");
-		System.out.println("get Result... " + result);
 		
 		return result;
 		
@@ -65,23 +65,23 @@ public class MongoDAO {
 	
 	public String catSay() {
 		
+		String result = "냥냥!";
+		try {
 		
 		MongoCollection<Document> collection = mongoTemplate.getCollection("catBrain");
 
-		AggregateIterable<Document> resultSet = collection.aggregate(Arrays.asList(
-				new Document("$sample", 1), 
-				new Document("$project", new Document("_Id", 0).append("text", "$views.text"))));
+		AggregateIterable<Document> resultSet = collection.aggregate(Arrays.asList(Aggregates.sample(1)));
 		
 		
-		String result = "냥냥!";
 		for(Document docObj : resultSet) {
-			System.out.println(docObj);
-		
+			System.out.println(docObj);		
 			result = docObj.getString("text");
 			
 		}
 		
-		
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
 		
 		return result;
 		
