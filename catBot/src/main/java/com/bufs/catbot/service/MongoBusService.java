@@ -1,5 +1,6 @@
 package com.bufs.catbot.service;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.Duration;
@@ -35,38 +36,67 @@ public class MongoBusService{
 	public static final int BUFS_SHUTTLE_TERM_NAMSAN = 10;
 	public static final int BUFS_SHUTTLE_TERM_FIRESTATION = 13;
 	public static final int BUFS_TOWNBUS_TERM_BOUND_NAMSAN = 6;
-
-
 	
+	
+	
+	public boolean isDay(String nowDateStr, String type) {
+		
+		Map<String, String> dayInfo = mongoDAO.findDayInfo(type);
+		SimpleDateFormat dateFormater =  new SimpleDateFormat();
+		Long start = null;
+		Long end = null;
+		Long now = null;
+		try {
+			start = dateFormater.parse(dayInfo.get("start")).getTime();
+			end = dateFormater.parse(dayInfo.get("end")).getTime();
+			now = dateFormater.parse(nowDateStr).getTime();
+			
+			if(start <= now && end >= now) {
+				return true;
+			}
+			
+		} catch (ParseException e) {
 
+			e.printStackTrace();
+			
+		}
+		
+		return false;
+		
+	}
+	
 	
 	 public Map<String, Object> getAllBusInfo(String type, String station, String bound){
 		
 		 Boolean isShuttleBus = false;
 		 Boolean isWeekend = false;
+		 Boolean isSeasonalSem = false;
+		 Boolean isHoliday = false;
 
 		 
 		 LocalDateTime nowT = LocalDateTime.now();
+		 String nowStr = nowT.toLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).toString();
 		 
-		 boolean isHoliday = mongoDAO.findHoliday(nowT.toLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).toString());
-			
+		 isHoliday = mongoDAO.findHoliday(nowStr);
+		 isSeasonalSem = this.isDay(nowStr, "계절학기");
+		 
 		 if(type.contains("셔틀")) {
 		
 			 if(!isHoliday) {
-			 isHoliday = mongoDAO.findUniversityHoliday(nowT.toLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).toString());		
+			 isHoliday = mongoDAO.findUniversityHoliday(nowStr);		
 			 }
 			 
 			 isShuttleBus = true;
 		 }
 		 
-			if(nowT.getDayOfWeek() == DayOfWeek.SATURDAY || nowT.getDayOfWeek() == DayOfWeek.SUNDAY || isHoliday) {
+		 if(nowT.getDayOfWeek() == DayOfWeek.SATURDAY || nowT.getDayOfWeek() == DayOfWeek.SUNDAY || isHoliday || this.isDay(nowStr, "방학")) {
 				
 				isWeekend = true;
 		 }
 		 
 		 
 		 Map<String, Object> result = new HashMap<String, Object>();
-		 List<String> pBusTable = busDAO.getAllBusInfo(isShuttleBus, station, bound, isWeekend);
+		 List<String> pBusTable = busDAO.getAllBusInfo(isShuttleBus, station, bound, isWeekend, isSeasonalSem);
 		 String message = GetAllBusMessage(parseBusTimeFormat(pBusTable), isShuttleBus, station, bound, isWeekend);
 		 result.put("text", message); 
 		 
@@ -110,23 +140,27 @@ public class MongoBusService{
 		 Date now = new Date();
 		 Boolean isWeekend = false;
 		 Boolean isShuttleBus = false;
+		 Boolean isSeasonalSem = false;
+		 Boolean isHoliday = false;
 		 String message = "";
 		 Map<String, Object> result = new HashMap<String, Object>();
-		 
+
 		 
 
 		LocalDateTime nowT = LocalDateTime.now();
-		
-		boolean isHoliday = mongoDAO.findHoliday(nowT.toLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).toString());
+		String nowStr = nowT.toLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).toString();
+		isHoliday = mongoDAO.findHoliday(nowStr);
+		isSeasonalSem = this.isDay(nowStr, "계절학기");
+
 		 if(type.contains("셔틀")) {
 			 isShuttleBus = true;	 
 			 if(!isHoliday) {
-				 isHoliday = mongoDAO.findUniversityHoliday(nowT.toLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).toString());		
+				 isHoliday = mongoDAO.findUniversityHoliday(nowStr);		
 				 }
 		 }
 		 
 		
-		if(nowT.getDayOfWeek() == DayOfWeek.SATURDAY || nowT.getDayOfWeek() == DayOfWeek.SUNDAY || isHoliday) {
+		if(nowT.getDayOfWeek() == DayOfWeek.SATURDAY || nowT.getDayOfWeek() == DayOfWeek.SUNDAY || isHoliday || this.isDay(nowStr, "방학")) {
 			
 			isWeekend = true;
 		}
@@ -153,13 +187,13 @@ public class MongoBusService{
 		 
 		 if(isShuttleBus) {
 		 
-			 timeTable = busDAO.getBusInfo(nowTime, "셔틀", null, null, null);
+			 timeTable = busDAO.getBusInfo(nowTime, "셔틀", null, null, null, isSeasonalSem);
 			 pBusTable = BusTimeChooser(timeTable,nowH, nowM,isShuttleBus);
 		
 		 }else {
 			 
 			 
-		timeTable = busDAO.getBusInfo(nowTime, "마을", station, bound, isWeekend);
+		timeTable = busDAO.getBusInfo(nowTime, "마을", station, bound, isWeekend, isSeasonalSem);
 		pBusTable = BusTimeChooser(timeTable, nowH, nowM, isShuttleBus);
 			 
 			 

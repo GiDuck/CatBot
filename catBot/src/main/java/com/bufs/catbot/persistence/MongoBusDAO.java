@@ -20,7 +20,11 @@ public class MongoBusDAO {
 	@Autowired
 	private MongoTemplate mongoTemplate;
 	
-	public List<String> getBusInfo(String nowTime, String type, String station, String bound, Boolean isWeekend){
+	
+	
+	
+	
+	public List<String> getBusInfo(String nowTime, String type, String station, String bound, Boolean isWeekend, Boolean isSeasonalSem){
 				
 		List<String> busTable = new ArrayList<String>();
 		String nowTimeToken = nowTime.substring(0, 2);
@@ -41,7 +45,7 @@ public class MongoBusDAO {
 
 		 criteria = new Criteria("타입").is("셔틀").andOperator(
 				 Criteria.where("시간").regex(pattern),
-				 Criteria.where("isWeekend").is("FALSE"));
+				 Criteria.where("isWeekend").is(isSeasonalSem));
 		 query = new Query(criteria);
 		 query.fields().include("시간");
 		 query.fields().exclude("_id");
@@ -70,7 +74,6 @@ public class MongoBusDAO {
 		 
 		for(MongoBusDTO dto : shuttlesTimeTable) {
 			busTable.add(dto.get시간());
-			 System.out.println("들어온 시간 : " + dto.get시간());
 		}
 	
 		return busTable;
@@ -79,7 +82,7 @@ public class MongoBusDAO {
 	
 	
 	
-	public List<String> getAllBusInfo(Boolean isShuttleBus, String station, String bound, Boolean isWeekend){
+	public List<String> getAllBusInfo(Boolean isShuttleBus, String station, String bound, Boolean isWeekend, Boolean isSeasonalSem){
 	
 		List<String> busTable = new ArrayList<String>();
 		Criteria criteria= null;
@@ -88,7 +91,7 @@ public class MongoBusDAO {
 		if(isShuttleBus) {
 
 			 criteria = new Criteria("타입").is("셔틀").andOperator(
-					 Criteria.where("isWeekend").is("FALSE"));
+					 Criteria.where("isWeekend").is(isSeasonalSem));
 			 query = new Query(criteria);
 			 query.fields().include("시간");
 			 query.fields().exclude("_id");
@@ -113,7 +116,6 @@ public class MongoBusDAO {
 			 
 			for(MongoBusDTO dto : pBusTable) {
 				busTable.add(dto.get시간());
-				 System.out.println("들어온 시간 : " + dto.get시간());
 			}
 
 	

@@ -1,6 +1,7 @@
 package com.bufs.catbot.persistence;
 
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -162,6 +163,19 @@ public class MongoDAO {
 		return isExsist;
 		
 	}
+	
+	public Map<String, String> findDayInfo(String arg){
+		
+		Criteria criteria = new Criteria("name");
+		criteria.is(arg);
+		Query query = new Query(criteria);
+		Map<String, String> result = mongoTemplate.findOne(query, HashMap.class,"catDay");
+		return result;
+		
+		
+	}
+	
+	
 	
 	
 	
