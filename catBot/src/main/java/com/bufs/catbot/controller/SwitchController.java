@@ -85,7 +85,7 @@ public class SwitchController {
 		Map<String, Map<String, Object>> result = new HashMap<String, Map<String,Object>>();
 		Map<String, Object> tempMap = null;
 
-		/*try {
+		try {
 		
 		String keyParam = (String)(reqParam.get("content"));
 		String user_key = (String)(reqParam.get("user_key"));
@@ -214,11 +214,8 @@ public class SwitchController {
 			errorMegBox.put("text", errorStr);
 			result.put("message", errorMegBox);	
 			
-		}*/
-		Map<String, Object> innerMsg = new HashMap<String, Object>();
-		innerMsg.put("text", "현재 냥냥봇 수리중이라냥.. 곧 다시 찾아오겠다냥!");
-		message.put("message", innerMsg);
-		
+		}
+
 		return message;
 	}
 	
