@@ -42,8 +42,6 @@ public class MongoBusService{
 	public boolean isDay(String nowDateStr, String type) {
 		
 		Map<String, String> dayInfo = mongoDAO.findDayInfo(type);
-		System.out.println("뽑아온 데이터...");
-		System.out.println(dayInfo);
 		SimpleDateFormat dateFormater =  new SimpleDateFormat("yyyy-MM-dd");
 		Long start = null;
 		Long end = null;
