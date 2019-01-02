@@ -85,10 +85,6 @@ public class MongoBusService{
 		 isSeasonalSem = isDay(nowStr, "계절학기");
 		 isVaction = isDay(nowStr, "방학");
 		 
-		 System.out.println("방학 및 계절학기 토큰...");
-		 System.out.println(isVaction);
-		 System.out.println(isSeasonalSem);
-
 		 if(type.contains("셔틀")) {
 		
 			 if(!isHoliday) {
@@ -216,11 +212,6 @@ public class MongoBusService{
 			 
 			 
 		 }
-		 
-		 System.out.println("넘어온 버스 정보...");
-		 System.out.println(timeTable);
-		 System.out.println(pBusTable);
-
 
 		 if(pBusTable.size()!=0) {
 		 
@@ -406,7 +397,7 @@ public class MongoBusService{
 		 
 		 
 		 
-		 return "운행 시간이 아니다냥.";
+		 return "운행 시간이 아니다냥.\n셔틀 버스는 약 10분, 마을버스는 30분 가격으로 버스 정보를 알려준다냥.\n혹시 필요하다면 전체 시간을 확인하라냥.";
 		 
 	 }
 	 
