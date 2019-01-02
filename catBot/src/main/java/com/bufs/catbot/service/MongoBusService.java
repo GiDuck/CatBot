@@ -217,6 +217,9 @@ public class MongoBusService{
 			 
 		 }
 		 
+		 System.out.println("넘어온 버스 정보...");
+		 System.out.println(timeTable);
+
 
 		 if(pBusTable.size()!=0) {
 		 
